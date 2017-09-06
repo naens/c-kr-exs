@@ -54,3 +54,8 @@ dkms.conf
 *~
 DEADJOE
 vgcore*
+
+# ignore all without extension
+*
+!*.*
+!*/
