@@ -50,8 +50,8 @@ int main()
 	      if (i > MAX_LINE_LENGTH)
 		{
 		  if (cut_place)
-		    printf("\n");
-		  print_word(0, buf, i - cut_place, MAX_LINE_LENGTH);
+                    printf("\n");
+                  print_word(0, buf, i - cut_place, MAX_LINE_LENGTH);
 		  i -= cut_place;
 		}
 	      else
