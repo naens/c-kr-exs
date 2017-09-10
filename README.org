@@ -9,5 +9,5 @@ Exercises from C K&R book
    - [[https://www.evernote.com/shard/s346/sh/097459c6-8063-4fab-92b8-1e7ae0622e8d/be5edb74225377b417709a84f58a44ce][code notes]]
  
 ** Other solutions:
- * https://github.com/purzelrakete/k-and-r-solutions
- * http://clc-wiki.net/wiki/K%26R2_solutions
+ * [[https://github.com/purzelrakete/k-and-r-solutions][purzelrakete/k-and-r-solutions]]
+ * [[http://clc-wiki.net/wiki/K%26R2_solutions][clc-wiki: K&R2 solutions]]
