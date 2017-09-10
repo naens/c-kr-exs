@@ -5,6 +5,6 @@ Exercises from C K&R book
  * peterzilla: https://drive.google.com/drive/folders/0B6mpkA8pDlJ1eC0teXNlWF9Hd1k
  * ski: https://github.com/siryog90/study-groups/tree/master/k&r-c
  
- ** Other solutions:
-  * https://github.com/purzelrakete/k-and-r-solutions
-  * http://clc-wiki.net/wiki/K%26R2_solutions
+** Other solutions:
+ * https://github.com/purzelrakete/k-and-r-solutions
+ * http://clc-wiki.net/wiki/K%26R2_solutions
