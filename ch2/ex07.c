@@ -8,7 +8,7 @@
  * 4: invert
  * 5: make result
  */
-int invert(unsigned int x, unsigned int p, unsigned int n)
+unsigned int invert(unsigned int x, unsigned int p, unsigned int n)
 {
   unsigned int r_1 = ~(~0 << n) << p;
   unsigned int r_2 = x & ~r_1;

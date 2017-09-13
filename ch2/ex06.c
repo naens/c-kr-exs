@@ -18,7 +18,7 @@
  * 4: construct the result from 1 and 3
  *   AfghEFGH
  */
-int setbits(unsigned int x, int p, int n, unsigned int y)
+unsigned int setbits(unsigned int x, int p, int n, unsigned int y)
 {
   unsigned int nbits = ~(~0 << n);
   unsigned int r_1 = ~(nbits << p) & x;
