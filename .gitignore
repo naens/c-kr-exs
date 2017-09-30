@@ -63,3 +63,4 @@ vgcore*
 vgcore.*
 a.out
 *.tex
+.fuse*
