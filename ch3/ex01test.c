@@ -2,57 +2,76 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define SZ 1000
+#define SZ 100000
 #define MAX 100000
 #define N_TESTS 200
 
 /* TEST  RESULTS (200 tests)
  * SZ,MAX  10      100     1000    10000   100000
- * bs1   11.7     25.3     103.8   160.3
- * bs2   10.6     21.4     33.1     48.6
+ * bs1   11.7     25.3     103.8   160.3    282.7
+ * bs2   10.6     21.4     33.1     48.6     68.4
  */
-
-struct number_node {
-  int number;
-  struct number_node *next;
-};
 
 double diff_time(struct timespec t0, struct timespec t1)
 {
   return (t1.tv_sec - t0.tv_sec) * 1e6 + (t1.tv_nsec - t0.tv_nsec) / 1e3;
 }
 
-
-void insert_number (struct number_node **ns, int number)
+/* heap sort */
+void swp(int *a, int i, int j)
 {
-  struct number_node *new = malloc(sizeof(struct number_node));
-  new->number = number;
-
-  while (*ns && (*ns)->number < number)
-    ns = &((*ns)->next);
-
-  new->next = *ns;
-  *ns = new;
+  int tmp = a[i];
+  a[i] = a[j];
+  a[j] = tmp;
 }
 
-/* TODO: improve sorted array generation! */
+void heapify(int *a, int len, int i)
+{
+  /* check if leaf */
+  if (i >= len / 2)
+    return;
+
+  int il = 2 * i + 1;
+  int ir = 2 * i + 2;
+  int im = ir >= len || a[il] > a[ir] ? il : ir;
+  if (a[i] < a[im])
+    {
+      swp(a, i, im);
+      heapify(a, len, im);
+    }
+}
+
+void heap_insert(int *a, int len, int n)
+{
+  int i = len;
+  a[i] = n;
+
+  int p;
+  while (i > 0 && a[i] > a[p=(i-1)/2])
+    {
+      swp(a, i, p);
+      i = p;
+    }
+}
+
+void heap_sort(int *a, int len)
+{
+  for (int i = len - 1; i > 0; i--)
+    {
+      swp(a, 0, i);
+      heapify(a, i, 0);
+    }
+}
+
 void gen_array(int *a, int len, int min, int max)
 {
-  struct number_node *numbers = 0;
   for (int i = 0; i < len; i++)
-    {
-      int n = rand() % (max - min) + min;
-      insert_number(&numbers, n);
-    }
+    heap_insert(a, i, rand() % (max - min) + min);
 
-  struct number_node *prev = numbers;
-  for (int i = 0; i < len; i++)
-    {
-      a[i] = numbers->number;
-      numbers = numbers->next;
-      free(prev);
-      prev = numbers;
-    }
+  heap_sort(a, len);
+  //  for (int i = 0; i < len; i++)
+  //    printf("%d ", a[i]);
+  //  printf("\n");
 
   a[len] = -1;                  /* after last element */
 }
@@ -117,28 +136,19 @@ int main (int argc, char **argv)
       x[i] = rand() % MAX;
     }
 
-  //  struct timeval t0, t1, t2;
-
   struct timespec t0, t1, t2;
 
-  //  gettimeofday(&t0, NULL);
-  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &t0);  /* do bs1 tests */
+  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &t0);
   for (int i = 0; i < N_TESTS; i++)
     bs1(array[i], SZ, x[i]);
 
-  //  gettimeofday(&t1, NULL);
   clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &t1);
 
-  /* do bs2 tests */
   for (int i = 0; i < N_TESTS; i++)
     bs2(array[i], SZ, x[i]);
 
-  //  gettimeofday(&t2, NULL);
   clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &t2);
 
-  //  unsigned long long int ttt0 = t0.tv_sec * 1000 + t0.tv_usec;
-  //  unsigned long long int ttt1 = t1.tv_sec * 1000 + t1.tv_usec;
-  //  unsigned long long int ttt2 = t2.tv_sec * 1000 + t2.tv_usec;
   double d1 = (t1.tv_sec - t0.tv_sec) * 1e6 + (t1.tv_nsec - t0.tv_nsec) / 1e3;
   double d2 = (t2.tv_sec - t1.tv_sec) * 1e6 + (t2.tv_nsec - t1.tv_nsec) / 1e3;
 
