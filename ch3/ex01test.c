@@ -69,9 +69,6 @@ void gen_array(int *a, int len, int min, int max)
     heap_insert(a, i, rand() % (max - min) + min);
 
   heap_sort(a, len);
-  //  for (int i = 0; i < len; i++)
-  //    printf("%d ", a[i]);
-  //  printf("\n");
 
   a[len] = -1;                  /* after last element */
 }
