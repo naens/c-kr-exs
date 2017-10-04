@@ -1,0 +1,37 @@
+#+LATEX_HEADER: \usepackage{svg}
+
+#+TITLE: Tests in Exercise 1 of Chapter 3
+
+So finally I decided to run some tests for this exercise, as it was
+asked in the book.  It was not easy to find how to generated a sorted
+array of a given size, nor to find how to calculate how long something
+takes.
+
+So, I generated arrays of a given size, the size of the array was
+equal to the maximum possible element in the array.  And for each size
+I ran 200 tests, as it can be seen in the source cose (it's not that
+complicated, it's defined with ~#define~'s.
+
+So, I have two procedures:
+ * ~bs1~, which makes only one comparison per cycle
+ * ~bs2~, which makes two comparisons, but has the possibility to no
+   run until the end.
+
+So which one would win?
+
+These are the results:
+
+#+PLOT: ind:1 set:"xrange [10:100000]" set:"logscale x"
+| SZ,MAX |   bs1 |  bs2 |
+|--------+-------+------|
+|     10 |  11.7 | 10.6 |
+|    100 |  25.3 | 21.4 |
+|   1000 | 103.8 | 33.1 |
+|  10000 | 160.3 | 48.6 |
+| 100000 | 282.7 | 68.4 |
+
+[[file:./bs.png]]
+
+So ok, for some reason this bs1 thing doesn't work as expected...  It
+must be that it always goes until the end and perhaps has a little bit
+more of operations inside of it...
