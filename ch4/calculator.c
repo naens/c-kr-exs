@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 
 #define END_ELEMENT 0
 #define END_LINE 98
@@ -19,11 +20,22 @@
 
 #define NO_VAL 1110187
 
+#define STACK_SIZE 0x100
 
+int variables[0x100];
+int stack[STACK_SIZE];
+int sp;
+int next_element;
 int read_element(char *buf)
 {
   int c;
   int i = 0;
+  if (next_element)
+    {
+      int res = next_element;
+      next_element = 0;
+      return res;
+    }
   while (c = getchar())
     {
       if (i == 0 && (c == ' ' || c == '\t'))
@@ -36,12 +48,24 @@ int read_element(char *buf)
       if (c == EOF)
         {
           buf[i] = 0;
-          return END_INPUT;
+          if (i > 0)
+            {
+              next_element = END_INPUT;
+              return END_ELEMENT;
+            }
+          else
+            return END_INPUT;
         }
       if (c == '\n')
         {
           buf[i] = 0;
-          return END_LINE;
+          if (i > 0)
+            {
+              next_element = END_LINE;
+              return END_ELEMENT;
+            }
+          else
+            return END_LINE;
         }
       else
         buf[i++] = c;
@@ -70,7 +94,7 @@ int is_number(char *str)
 {
   while (*str >= '0' && *str <= '9')
     str++;
-  return str == 0;
+  return *str == 0;
 }
 
 int read_number(char *str)
@@ -80,6 +104,7 @@ int read_number(char *str)
     {
       Result *= 10;
       Result += *str - '0';
+      str++;
     }
   return Result;
 }
@@ -134,27 +159,105 @@ void parse_element(char *elem, int *type, int *value)
     }
 }
 
+int apply(int oper, int n1, int n2)
+{
+  switch (oper)
+    {
+    case OPER_PLUS:
+      return n1 + n2;
+    case OPER_MINUS:
+      return n2 - n1;
+    case OPER_MULT:
+      return n1 * n2;
+    case OPER_DIV:
+      return n2 / n1;
+    case OPER_EXP:
+      return pow(n1,n2);
+    case OPER_LOG:
+      /* logarithm of x base b = log(x)/log(b) */
+      return log(n2) / log(n1);
+    }
+  return -1;
+}
 
+int get_value(char *s)
+{
+  return variables[*s];
+}
 
+void print_stack()
+{
+  for (int i = 0; i < sp; i++)
+    printf("[%d]=%d\n", i, stack[i]);
+}
+
+void push(int n)
+{
+  stack[sp++] = n;
+}
+
+int pop()
+{
+  return stack[--sp];
+}
+
+void work_with(char *s, int type, int value)
+{
+  //printf("work_with: s=%s, type=%d, value=%d\n", s, type, value);
+  int n1, n2;
+  switch (type)
+    {
+    case ELEM_OPER:
+      n1 = pop();
+      n2 = pop();
+      push(apply(value, n1, n2));
+      printf("work with oper %d, numbers %d,%d, result %d\n", value, n1, n2, apply(value, n1, n2));
+      break;
+    case ELEM_NUMBER:
+      printf("work with number %d\n", value);
+      push(value);
+      break;
+    case ELEM_VAR:
+      push(get_value(s));
+      break;
+    }
+}
+
+void calc_eol()
+{
+  print_stack();
+  printf("[Val=%d]EOL\n", stack[sp-1]);
+}
+
+void calc_eof()
+{
+  int n = pop();
+  printf("[Result=%d]EOF\n", n);
+}
 
 int main(int argc, char **argv)
 {
+  sp = 0;
+  next_element = 0;
   if (argc == 1)                /* read from stdin */
     {
       int res;
       char buf[0x100];
+      int type;
+      int value;
       while ((res = read_element(buf)) != END_INPUT)
         {
           switch (res)
             {
             case END_ELEMENT:   /* work with element */
-              printf("element: '%s'\n", buf);
+              parse_element(buf, &type, &value);
+              work_with(buf, type, value);
               break;
             case END_LINE:      /* send end of line to the calculator */
-              printf("end of line\n");
+              calc_eol();
               break;
             case END_INPUT:     /* send end of input to the calculator */
-              printf("end of input\n");
+              calc_eof();
               break;
             }
         }
@@ -164,9 +267,11 @@ int main(int argc, char **argv)
       for (int i = 1; i < argc; i++)
         {
           char *el = trim(argv[i]);
-          printf("element=%s\n", el);
-          /* TODO: send element to calculator */
+          int type;
+          int value;
+          parse_element(el, &type, &value);
+          work_with(el, type, value);
         }
-      /* TODO: send end of input to calculator */
+      calc_eof();
     }
 }
