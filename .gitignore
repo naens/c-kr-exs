@@ -51,7 +51,6 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
-*~
 DEADJOE
 vgcore*
 
@@ -59,8 +58,9 @@ vgcore*
 *
 !*.*
 !*/
-*~
 vgcore.*
 a.out
 *.tex
 .fuse*
+!Makefile
+*~
