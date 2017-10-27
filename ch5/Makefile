@@ -1,4 +1,4 @@
-all: clean entab detab tl
+all: clean entab detab tl srt
 
 entab:
 	gcc -g ex12.c -o entab
@@ -9,5 +9,8 @@ detab:
 tl:
 	gcc -g ex13.c -o tl
 
+srt:
+	gcc -g srt.c -o srt
+
 clean:
-	rm -f entab detab tl
+	rm -f entab detab tl srt
