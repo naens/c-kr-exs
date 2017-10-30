@@ -1,0 +1,58 @@
+#+TITLE: Chapter 5 Notes
+
+#+OPTIONS: toc:nil
+#+OPTIONS: num:nil
+
+* Introduction
+
+So it has been a very difficult chapter with lots of new things.  It's still
+not easy to see the right way to program.  During this chapter many
+decisions have been made that made the code less efficient, more buggy, less
+maintainable and more difficult to read.
+
+* Pointers
+
+We have used a lot of pointers here.  The most important new thing were the
+pointers to functions.  Using them it is now possible to pass a function as
+argument.  Without that we would have to modify the function in order to
+decide the right way to do.  And instead of passing a function we would pass
+a constant that represents the action to perform.
+
+The way pointers to functions are declared is so complicated that it is not
+really explained in the book and instead is an exercise for the reader so
+that he do no fall asleep.
+
+One interesting thing is that they say that it is recommended to use ~NULL~
+for pointers instead of ~0~ even though we have to import it from a separate
+library.
+
+* Arrays
+
+Now we there is a better way to understand arrays.  If they have a specified
+size, they are just values of the address of the first item.  That's why
+arrays don't have an address, just like a value ~1~ passed to a function
+doen't have an address.
+
+Arrays can contain different kind of values and can be of differenr sizes.
+
+When arrays are multidimensional, it means that each of their elements is an
+array.  So just like arrays are numbers, subarrays of mulitdimensional
+arrays are also numbers
+
+* Command line areguments
+
+C programs can have several command line arguments.  They are stored in the
+second parameter of the main function.
+
+* Programs
+
+For this chapter I made two separate programs:
+ * A sort application, that depending of the command line arguments sorts
+   the input from ~stdin~,
+ * A declaration reader, that reads declarations of C variables and makes an
+   attempt at understaning them.
+
+* Conclusion
+
+So that is what this chapter was.  Further there will be even more real and
+interesting things according to the promises made in this chapter.
