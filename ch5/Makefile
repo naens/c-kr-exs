@@ -1,4 +1,4 @@
-all: clean entab detab tl srt
+all: clean entab detab tl srt dcls
 
 entab:
 	gcc -g ex12.c -o entab
@@ -12,5 +12,8 @@ tl:
 srt:
 	gcc -g srt.c -o srt
 
+dcls:
+	gcc -g -Wall -Wextra dcls.c -o dcls
+
 clean:
-	rm -f entab detab tl srt
+	rm -f entab detab tl srt dcls
