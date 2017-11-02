@@ -1,61 +1,27 @@
-<compilation>::= <module> [EOF]
-<module>::= <module name> : <simple do block>
-<module name>::= identifier
+module = ident ":" do_block
 
-<simple do block>::= <simple do statement>
-	[<declaration>...][<unit>...]<ending>
-<simple do statement>::= DO ;
-<ending>::= END [<identifier>] ;
+declaration = decl_statement | procedure
+decl_statement = "DECLARE" ident { "," ident } ";"
 
-<declaration>::= <declare statement>
-	| <procedure definition>
+procedure = proc_statement block_end
+proc_statement= ident ":" "PROCEDURE" [ params ] ";"
+params = "(" ident { "," ident } ")"
 
-<declare statement>::= DECLARE <identifier>[,<identifier>]...;
+unit = cond | do_block | do_while | do_iter | statement
 
-<procedure definition>::= <procedure statement>
-	[<declaration>...][<unit>...]<ending>
+cond = "IF" expr "THEN" unit
+     | "IF" expr "THEN" unit "ELSE" unit
 
-<procedure statement>::= <identifier> : PROCEDURE
-	[<formal parameter list>];
-<formal parameter list>::= (<identifier>[,<identifier>]...)
+do_block = "DO" ";" block_end
+do_while = "DO" "WHILE" expr ";" block_end
+do_iter = "DO" ident "=" expr "TO" expr [ "BY" expr ] ";" block_end
 
-<unit>::= <conditional clause>
-	| <simple do block>
-	| <do-while block>
-	| <iterative do block>
-	| <basic statement>
+block_end = { declaration } { unit } "END" [ ident ] ";"
 
-<conditional clause>::= IF <expression> THEN <unit>
-	| IF <expression> THEN <unit> ELSE <unit>
+statement = ident "=" expr | "CALL" ident [ args ]  | ";" | "RETURN" expr
+args = "(" expr { "," expr } ")"
 
-<do-while block>::= <do-while statement>[<unit>...]<ending>
-<do-while statement>::= DO WHILE <expression> ;
-
-<iterative do block>::= <iterative do statement>[<unit>...]<ending>
-<iterative do statement>::= DO <index part><to part>[<by part>] ;
-<index part>::= <identifier> = <expression>
-<to part>::= TO <expression>
-<by part>::= BY <expression>
-
-<basic statement>::= <assignment statement>
-	| <call statement>
-	| <null statement>
-	| <return statement>
-<assignment statement>::= <identifier> = <expresstion> ;
-<call statement>::= CALL <identifier>[<parameter list>];
-<parameter list>::= (<expression> [, <expression>]...)
-<null statement>::= ;
-<return statement>::= RETURN [<expression>];
-
-<expression>::= <arithmetic expression>
-	[<relational operator> <arithmetic expression>]
-<arithmetic expression>::= <term>
-	| <arithmetic expression> <adding opertor> <term>
-<term>::= <secondary>
-	| <term> <multiplying operator> <secondary>
-<secondary>::= [-] <primary>
-<primary>::= <number>
-	| <string>
-	| <identifier>
-	| <identifier>[<parameter list>]
-	| (<expression>)
+expr = arithm [ ( "<" | ">" | "<=" | ">=" | "<>" | "=" ) arithm ]
+arithm = term | arithm ( "+" | "-" ) term
+term = factor | term ( "*" | "/") factor
+factor = [ "-" ] ( number | string | ident [ args ] | "(" expr ")")
