@@ -1,0 +1,61 @@
+<compilation>::= <module> [EOF]
+<module>::= <module name> : <simple do block>
+<module name>::= identifier
+
+<simple do block>::= <simple do statement>
+	[<declaration>...][<unit>...]<ending>
+<simple do statement>::= DO ;
+<ending>::= END [<identifier>] ;
+
+<declaration>::= <declare statement>
+	| <procedure definition>
+
+<declare statement>::= DECLARE <identifier>[,<identifier>]...;
+
+<procedure definition>::= <procedure statement>
+	[<declaration>...][<unit>...]<ending>
+
+<procedure statement>::= <identifier> : PROCEDURE
+	[<formal parameter list>];
+<formal parameter list>::= (<identifier>[,<identifier>]...)
+
+<unit>::= <conditional clause>
+	| <simple do block>
+	| <do-while block>
+	| <iterative do block>
+	| <basic statement>
+
+<conditional clause>::= IF <expression> THEN <unit>
+	| IF <expression> THEN <unit> ELSE <unit>
+
+<do-while block>::= <do-while statement>[<unit>...]<ending>
+<do-while statement>::= DO WHILE <expression> ;
+
+<iterative do block>::= <iterative do statement>[<unit>...]<ending>
+<iterative do statement>::= DO <index part><to part>[<by part>] ;
+<index part>::= <identifier> = <expression>
+<to part>::= TO <expression>
+<by part>::= BY <expression>
+
+<basic statement>::= <assignment statement>
+	| <call statement>
+	| <null statement>
+	| <return statement>
+<assignment statement>::= <identifier> = <expresstion> ;
+<call statement>::= CALL <identifier>[<parameter list>];
+<parameter list>::= (<expression> [, <expression>]...)
+<null statement>::= ;
+<return statement>::= RETURN [<expression>];
+
+<expression>::= <arithmetic expression>
+	[<relational operator> <arithmetic expression>]
+<arithmetic expression>::= <term>
+	| <arithmetic expression> <adding opertor> <term>
+<term>::= <secondary>
+	| <term> <multiplying operator> <secondary>
+<secondary>::= [-] <primary>
+<primary>::= <number>
+	| <string>
+	| <identifier>
+	| <identifier>[<parameter list>]
+	| (<expression>)
