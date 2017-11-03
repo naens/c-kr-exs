@@ -1,7 +1,8 @@
 module = ident ":" do_block
 
 declaration = decl_statement | procedure
-decl_statement = "DECLARE" ident { "," ident } ";"
+decl_statement = "DECLARE" decl_element { "," decl_element } ";"
+decl_element = ident [ "INITIAL"  number ]
 
 procedure = proc_statement block_end
 proc_statement= ident ":" "PROCEDURE" [ params ] ";"
@@ -24,4 +25,4 @@ args = "(" expr { "," expr } ")"
 expr = arithm [ ( "<" | ">" | "<=" | ">=" | "<>" | "=" ) arithm ]
 arithm = term | arithm ( "+" | "-" ) term
 term = factor | term ( "*" | "/") factor
-factor = [ "-" ] ( number | string | ident [ args ] | "(" expr ")")
+factor = [ "-" ] ( number | ident [ args ] | "(" expr ")")
