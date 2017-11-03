@@ -1,0 +1,16 @@
+prog$mult:
+do;
+    mult: procedure(a, b);
+        rec: procedure(a, b, acc);
+            if b = 0 then
+                return acc;
+            else if b - b / 2 * 2 = 0 then
+                return rec(2 * a, b / 2, acc);
+            else
+                return rec(a, b - 1, acc + a);
+        end rec;
+        rec(a, b, 0);
+    end mult;
+
+    call writeln(mult(3, 6));
+end prog$mult;

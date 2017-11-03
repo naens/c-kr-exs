@@ -1,0 +1,16 @@
+prog$fib:
+do;
+    declare val initial 7;
+
+    fib: procedure(n);
+        if n = 0 then
+            return 0;
+        else if n = 1 then
+            return 1;
+        else
+            return fib(n - 1) + fib(n - 2);
+    end fib;
+
+    call writeln(fib(val));
+end prog$fib;
+
