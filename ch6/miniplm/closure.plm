@@ -1,8 +1,9 @@
 closure:
 do;
     test: procedure;
-        declare x;
+        declare x integer;
         test2: procedure(n);
+            declare n integer;
             x = x + n;
             call writeln(x);
         end test2;

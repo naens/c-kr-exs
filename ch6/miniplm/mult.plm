@@ -1,7 +1,10 @@
 prog$mult:
 do;
     mult: procedure(a, b);
+        declare a integer, b integer;
         rec: procedure(a, b, acc);
+            declare a integer, b integer;
+            declare acc integer;
             if b = 0 then
                 return acc;
             else if b - b / 2 * 2 = 0 then

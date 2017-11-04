@@ -1,13 +1,13 @@
 scope:
 do;
-    declare s;
+    declare s integer;
 
     proc$2: procedure;
         call writeln(s):
     end proc$2;
 
     proc$1: procedure;
-        declare s;
+        declare s integer;
         s = 1;
         call proc$2;
     end proc$1;

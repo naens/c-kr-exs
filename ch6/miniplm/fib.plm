@@ -1,8 +1,9 @@
 prog$fib:
 do;
-    declare val initial 7;
+    declare val integer initial 7;
 
     fib: procedure(n);
+        declare n integer;
         if n = 0 then
             return 0;
         else if n = 1 then
