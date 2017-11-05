@@ -4,6 +4,8 @@
 
 #include "miniplm.h"
 
+char *type[] = { "byte", "integer", "string", NULL };
+
 int is_spec(char c)
 {
     return c == '+' || c == '-' || c == '*' || c == '/'
@@ -192,6 +194,66 @@ void read_quoted(FILE *file, char *buf)
     *buf = 0;
 }
 
+struct unread {
+    FILE *file;
+    struct element *element;
+    struct unread *next;
+};
+
+struct unread *unread_stack = NULL;
+
+
+void unread_token(FILE* file, struct element* element)
+{
+    struct element *new_element = malloc(sizeof(struct element));
+    new_element->type = element->type;
+    new_element->elem_term = element->elem_term;
+    new_element->val = element->val;
+
+    struct unread *new_unread = malloc(sizeof(struct unread));
+    new_unread->file = file;
+    new_unread->element = new_element;
+    new_unread->next = unread_stack;
+    unread_stack = new_unread;
+}
+
+int pop_unread(FILE *file, struct element *element)
+{
+    struct unread **ppu = &unread_stack;
+    while (*ppu != NULL)
+    {
+        if ((*ppu)->file == file)
+        {
+            element->type = (*ppu)->element->type;
+            element->elem_term = (*ppu)->element->elem_term;
+            element->val = (*ppu)->element->val;
+            free((*ppu)->element);
+            struct unread *old = *ppu;
+            *ppu = (*ppu)->next;
+            free(old);
+            return 1;
+        }
+        ppu = &(*ppu)->next;
+    }
+    return 0;
+}
+
+int read_token_from_file(FILE*, struct element*);
+
+int read_token(FILE *file, struct element *element)
+{
+    struct element e;
+    if (!pop_unread(file, &e))
+        return read_token_from_file(file, element);
+    else
+    {
+        element->type = e.type;
+        element->elem_term = e.elem_term;
+        element->val = e.val;
+        return 0;
+    }
+}
+
 /* Reads a single token from file, unreads if character 
  * is read outside the token.
  * Spaces and comments are skipped
@@ -205,7 +267,7 @@ void read_quoted(FILE *file, char *buf)
  * + 0: "everything ok"
  * + EOF: end of input, means no token was read
  */
-int read_token(FILE *file, struct element *element)
+int read_token_from_file(FILE *file, struct element *element)
 {
     int c;
     int is_comment = 0;
@@ -294,7 +356,7 @@ int read_token(FILE *file, struct element *element)
     return EOF;
 }
 
-int sprint_terminal(char *buf, struct element *element)
+int sprint_element(char *buf, struct element *element)
 {
     int n = 0;
     if (element->elem_term == TERMINAL)
@@ -357,33 +419,23 @@ int sprint_terminal(char *buf, struct element *element)
             break;
         }
     }
-    return n;
-}
-
-int main(int argc, char **argv)
-{
-    FILE *f;
-    if (argc == 2)
-    {
-        f = fopen(argv[1], "r");
-        if (f == NULL)
-        {
-            fprintf(stderr, "could not open %s\n", argv[1]);
-            return 1;
-        }
-    }
     else
-        f = stdin;
-
-    int res;
-    struct element element;
-    while ((res = read_token(f, &element)) != EOF)
     {
-        char buf[0x100];
-        sprint_terminal(buf, &element);
-        printf("%s\n", buf);
+        n += sprintf(buf + n, "[");
+        switch (element->type)
+        {
+        default:
+            n += sprintf(buf + n, "nonterminal");
+            break;
+        }
+        n += sprintf(buf + n, ":");
+        struct elem_list *plist = element->val.elem_list;
+        while (plist != NULL)
+        {
+            n += sprint_element(buf + n, plist->element);
+            plist = plist->next;
+        }
+        n += sprintf(buf + n, "]");
     }
-
-    printf("\n");
-    return 0;
+    return n;
 }

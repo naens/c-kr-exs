@@ -1,7 +1,13 @@
-all:	clean read_file
+CC = gcc
+CFLAGS = -g -O0 -Wall -Wextra
 
-read_file:
-	gcc -g -O0 -Wall -Wextra read_file.c -o read_file
+all: read_test parse_test
+
+read_test: read_file.o
+	gcc $(CFLAGS) read_file.o read_test.c -o read_test
+
+parse_test: read_file.o parse.o
+	gcc $(CFLAGS) read_file.o parse.o parse_test.c -o parse_test
 
 clean:
-	rm -f read_file
+	rm -f read_test parse_test read_file.o parse.o

@@ -6,21 +6,19 @@
 #define MAX_NUMLEN 0x100
 
 enum type {
+    START,
     MODULE, DECLARATION, DECL_STATEMENT, DECL_ELEMENT,
     PROCEDURE, PROC_STATEMENT, PARAMS,
     UNIT, COND, DO_BLOCK, DO_WHILE, DO_ITER, BLOCK_END,
     STATEMENT, ARGS, EXPR, ARITHM, TERM, FACTOR,
     NUMBER, STRING_LIT, IDENT, TYPE,
     PLUS, MINUS, STAR, SLASH, LOWER, GREATER, EQUAL, COLON, SEMICOLON, COMMA,
-    PAROP, PARCLOSE,
+    PAROP, PARCLOSE, REL_OP,
     RW_DECLARE, RW_PROCEDURE, RW_TO, RW_BY, RW_INITIAL, RW_DO, RW_WHILE, RW_END,
     RW_IF, RW_THEN, RW_ELSE, RW_CALL, RW_RETURN
 };
 
 enum elem_term { TERMINAL, NONTERMINAL };
-
-    
-char *type[] = { "byte", "integer", "string", NULL };
 
 struct elem_list;
 
@@ -41,6 +39,8 @@ struct elem_list {
 
 int read_token(FILE*, struct element*);
 
-int sprint_terminal(char*, struct element*);
+void unread_token(FILE*, struct element*);
+
+int sprint_element(char*, struct element*);
 
 #endif /* MINIPLM_H */
