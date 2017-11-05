@@ -22,7 +22,8 @@ block_end = { declaration } { unit } "END" [ ident ] ";"
 statement = ident "=" expr | "CALL" ident [ args ]  | ";" | "RETURN" expr
 args = "(" expr { "," expr } ")"
 
-expr = arithm [ ( "<" | ">" | "<=" | ">=" | "<>" | "=" ) arithm ]
-arithm = term | arithm ( "+" | "-" ) term
-term = factor | term ( "*" | "/") factor
+rel_op = "<" | ">" | "<=" | ">=" | "<>" | "="
+expr = arithm [ rel_op  arithm ]
+arithm = { term ( "+" | "-" ) } term
+term = { term ( "*" | "/") } factor
 factor = [ "-" ] ( number | ident [ args ] | "(" expr ")")
