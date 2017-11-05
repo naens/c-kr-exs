@@ -64,3 +64,4 @@ a.out
 .fuse*
 !Makefile
 *~
+*.o
