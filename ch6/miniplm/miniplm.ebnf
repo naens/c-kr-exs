@@ -2,7 +2,8 @@ module = ident ":" do_block
 
 declaration = decl_statement | procedure
 decl_statement = "DECLARE" decl_element { "," decl_element } ";"
-decl_element = ident type [ "INITIAL"  number ]
+decl_element = ident type [ initial ]
+initial = "(" "INITIAL"  number ")" 
 
 procedure = proc_statement block_end
 proc_statement= ident ":" "PROCEDURE" [ params ] ";"
