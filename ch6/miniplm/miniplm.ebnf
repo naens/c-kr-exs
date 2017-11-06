@@ -25,5 +25,5 @@ args = "(" expr { "," expr } ")"
 rel_op = "<" | ">" | "<=" | ">=" | "<>" | "="
 expr = arithm [ rel_op  arithm ]
 arithm = { term ( "+" | "-" ) } term
-term = { term ( "*" | "/") } factor
+term = { factor ( "*" | "/") } factor
 factor = [ "-" ] ( number | ident [ args ] | "(" expr ")")
