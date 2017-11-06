@@ -82,7 +82,12 @@ int main(int argc, char **argv)
         return 3;
     }
     struct element element;
-    (*pstart)(file, &element);
+    int res = (*pstart)(file, &element);
+    if (!res)
+    {
+        fprintf(stderr, "bad input\n");
+        return 7;
+    }
 
     char buf[0x100];
     sprint_element(buf, &element);
