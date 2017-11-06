@@ -68,7 +68,7 @@ int main(int argc, char **argv)
                 *s++ = ' ';
         }
         *s = 0;
-        printf("input string: '%s', starting from %s\n", fstr, fname);
+//        printf("input string: '%s', starting from %s\n", fstr, fname);
         file = fmemopen(fstr, len, "r");
         if (file == NULL)
         {

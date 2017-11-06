@@ -9,5 +9,8 @@ read_test: read_file.o
 parse_test: read_file.o parse.o
 	gcc $(CFLAGS) read_file.o parse.o parse_test.c -o parse_test
 
+test: parse_test
+	@sh runtests.sh
+
 clean:
 	rm -f read_test parse_test read_file.o parse.o
