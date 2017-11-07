@@ -1,28 +1,30 @@
 #!/bin/sh
-for f in tests/*.tst
+for f in tests/*.json
 do
     echo Testing $f
 
     #process line by line, compare
-    while read ln;
+    n=$(cat $f | jq '.[].start' | wc -l)
+    echo n=$n
+    i=0
+    while [ $i -lt $n ]
     do
-    	start=$(echo "$ln" | cut -f1)
-    	instr=$(echo "$ln" | cut -f2)
-    	reslt=$(echo "$ln" | cut -f3)
-    	if [ -n "$start" ] && [ -n "$instr" ] && [ -n "$reslt" ]
-    	then
-    	    res="$(./parse_test $start \"$instr\" 2> /dev/null)"
-    	    if [ "$?" -ne 0 ] && [ "$reslt" = "BAD_EXPR" ]
-    	    then
-                printf 'OK:%14s\t%-12s====>\tBAD_EXPR\n' "$start" "$instr"
-            elif [ "$res" = "$reslt" ]
-            then
-                printf 'OK:%14s\t%-12s====>\t%s\n' "$start" "$instr" "$reslt"
-            else
-                printf 'ERROR:%14s\t%-12s====>\t%s\tRESULT=%s\n' \
-                		"$start" "$instr" "$reslt" "$res"
-            fi
-    	fi
-    done < $f
+        str="$(cat $f | jq -c '.['$i']')"
+	start=$(echo "$str" | jq .start)
+	input=$(echo "$str" | jq .input)
+	result=$(echo "$str" | jq -c .result)
+        res=$(eval ./parse_test $start $input 2>&1)
+        if [ "$?" -ne 0 ] && [ "$result" = "bad input" ]
+        then
+             printf 'OK:%14s\t%-12s====>\tbad input\n' "$start" "$input"
+        elif [ "$res" = "$result" ]
+        then
+            printf 'OK:%14s\t%-12s====>\t%s\n' "$start" "$input" "$result"
+        else
+            printf 'ERROR:%14s\t%-12s====>\t%s\tRESULT="%s"\n' \
+            		"$start" "$input" "$reslt" "$res"
+        fi
+        i=$(expr $i + 1)
+    done
 done
 

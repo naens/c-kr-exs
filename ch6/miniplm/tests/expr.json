@@ -1,0 +1,234 @@
+[
+  {
+    "start": "rel_op",
+    "input": "=",
+    "result": {
+      "rel_op": [
+        "="
+      ]
+    }
+  },
+  {
+    "start": "rel_op",
+    "input": "<>",
+    "result": {
+      "rel_op": [
+        "<",
+        ">"
+      ]
+    }
+  },
+  {
+    "start": "rel_op",
+    "input": "<",
+    "result": {
+      "rel_op": [
+        "<"
+      ]
+    }
+  },
+  {
+    "start": "rel_op",
+    "input": "<=",
+    "result": {
+      "rel_op": [
+        "<",
+        "="
+      ]
+    }
+  },
+  {
+    "start": "term",
+    "input": "7",
+    "result": {
+      "term": [{
+        "factor": [
+          {
+            "number": "7"
+          }
+        ]
+      }]
+    }
+  },
+  {
+    "start": "term",
+    "input": "-123",
+    "result": {
+      "term": [{
+        "factor": [
+          "-",
+          {
+            "number": "123"
+          }
+        ]
+      }]
+    }
+  },
+  {
+    "start": "term",
+    "input": "8*-9",
+    "result": {
+      "term": [
+        {
+          "factor": [
+            {
+              "number": "8"
+            }
+          ]
+        },
+        "*",
+        {
+          "factor": [
+            "-",
+            {
+              "number": "9"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "start": "term",
+    "input": "-8*79",
+    "result": {
+      "term": [
+        {
+          "factor": [
+            "-",
+            {
+              "number": "8"
+            }
+          ]
+        },
+        "*",
+        {
+          "factor": [
+            {
+              "number": "79"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "start": "arithm",
+    "input": "-8",
+    "result": {
+      "arithm": [
+        {
+          "term": [
+            {
+              "factor": [
+                "-",
+                {
+                  "number": "8"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "start": "arithm",
+    "input": "8--8",
+    "result": {
+      "arithm": [
+        {
+          "term": [
+            {
+              "factor": [
+                {
+                  "number": "8"
+                }
+              ]
+            }
+          ]
+        },
+        "-",
+        {
+          "term": [
+            {
+              "factor": [
+                "-",
+                {
+                  "number": "8"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "start": "arithm",
+    "input": "8-(-8)",
+    "result": {
+      "arithm": [
+        {
+          "term": [
+            {
+              "factor": [
+                {
+                  "number": "8"
+                }
+              ]
+            }
+          ]
+        },
+        "-",
+        {
+          "term": [
+            {
+              "factor": [
+                "(",
+                {
+                  "expr": [
+                    {
+                      "arithm": [
+                        {
+                          "term": [
+                            {
+                              "factor": [
+                                "-",
+                                {
+                                  "number": "8"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                ")"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "start": "factor",
+    "input": "-doo",
+    "result": {
+      "factor": [
+        "-",
+        {
+          "ident": "doo"
+        }
+      ]
+    }
+  },
+  {
+    "start": "factor",
+    "input": "-do",
+    "result": "bad input"
+  }
+]

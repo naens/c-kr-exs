@@ -85,7 +85,7 @@ int main(int argc, char **argv)
     int res = (*pstart)(file, &element);
     if (!res)
     {
-        fprintf(stderr, "bad input\n");
+        fprintf(stderr, "\"bad input\"\n");
         return 7;
     }
 

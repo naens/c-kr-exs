@@ -364,7 +364,7 @@ int sprint_element(char *buf, struct element *element)
         switch (element->type)
         {
         case NUMBER:
-            n = sprintf(buf, "<number:%d>", element->val.num);
+            n = sprintf(buf, "{\"number\":\"%d\"}", element->val.num);
             break;
         case TYPE:
             n = sprintf(buf, "<type:%s>", element->val.str);
@@ -412,45 +412,49 @@ int sprint_element(char *buf, struct element *element)
             n = sprintf(buf, "<return>");
             break;
         case IDENT:
-            n = sprintf(buf, "<ident:%s>", element->val.str);
+            n = sprintf(buf, "{\"ident\":\"%s\"}", element->val.str);
             break;
         default:
-            n = sprintf(buf, "{%c}", spec_from_id(element->type));
+            n = sprintf(buf, "\"%c\"", spec_from_id(element->type));
             break;
         }
     }
     else
     {
-        n += sprintf(buf + n, "[");
+        n += sprintf(buf + n, "{");
         switch (element->type)
         {
         case REL_OP:
-            n += sprintf(buf + n, "rel_op");
+            n += sprintf(buf + n, "\"rel_op\"");
             break;
         case EXPR:
-            n += sprintf(buf + n, "expr");
+            n += sprintf(buf + n, "\"expr\"");
             break;
         case ARITHM:
-            n += sprintf(buf + n, "arithm");
+            n += sprintf(buf + n, "\"arithm\"");
             break;
         case TERM:
-            n += sprintf(buf + n, "term");
+            n += sprintf(buf + n, "\"term\"");
             break;
         case FACTOR:
-            n += sprintf(buf + n, "factor");
+            n += sprintf(buf + n, "\"factor\"");
             break;
         default:
-            n += sprintf(buf + n, "nonterminal");
+            n += sprintf(buf + n, "\"nonterminal\"");
             break;
         }
-        n += sprintf(buf + n, ":");
+        n += sprintf(buf + n, ":[");
         struct elem_list *plist = element->val.elem_list;
+        int first = 1;
         while (plist != NULL)
         {
+            if (!first)
+                n += sprintf(buf + n, ",");
             n += sprint_element(buf + n, plist->element);
             plist = plist->next;
+            first = 0;
         }
-        n += sprintf(buf + n, "]");
+        n += sprintf(buf + n, "]}");
     }
     return n;
 }
