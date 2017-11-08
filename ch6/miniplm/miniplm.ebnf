@@ -11,8 +11,7 @@ params = "(" ident { "," ident } ")"
 
 unit = cond | do_block | do_while | do_iter | statement
 
-cond = "IF" expr "THEN" unit
-     | "IF" expr "THEN" unit "ELSE" unit
+cond = "IF" expr "THEN" unit [ "ELSE" unit ]
 
 do_block = "DO" ";" block_end
 do_while = "DO" "WHILE" expr ";" block_end
@@ -20,7 +19,7 @@ do_iter = "DO" ident "=" expr "TO" expr [ "BY" expr ] ";" block_end
 
 block_end = { declaration } { unit } "END" [ ident ] ";"
 
-statement = ident "=" expr | "CALL" ident [ args ]  | ";" | "RETURN" expr
+statement = ident "=" expr | "CALL" ident [ args ]  | ";" | "RETURN" [ expr ]
 args = "(" expr { "," expr } ")"
 
 rel_op = "<" | ">" | "<=" | ">=" | "<>" | "="
