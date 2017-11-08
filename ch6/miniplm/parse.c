@@ -97,7 +97,312 @@ int start(FILE *file, struct element *element)
     element->type = START;
     element->elem_term = NONTERMINAL;
     element->val.elem_list = NULL;
+    return add_nonterm(file, element, &module);
+}
+
+/* module = ident ":" do_block */
+int module(FILE *file, struct element *element)
+{
+    element->type = MODULE;
+    element->elem_term = NONTERMINAL;
+    element->val.elem_list = NULL;
+    if (!add_term(file, element, IDENT))
+        return 0;
+    if (!add_term(file, element, COLON)
+        || !add_nonterm(file, element, &do_block))
+    {
+        free_list(file, element);
+        return 0;
+    }
+    return 0;
+}
+
+/* declaration = decl_statement | procedure */
+int declaration(FILE *file, struct element *element)
+{
+    element->type = DECLARATION;
+    element->elem_term = NONTERMINAL;
+    element->val.elem_list = NULL;
+    if (add_nonterm(file, element, &decl_statement))
+        return 1;
+    else if (add_nonterm(file, element, &procedure))
+        return 1;
+    return 0;
+}
+
+/* decl_statement = "DECLARE" decl_element { "," decl_element } ";" */
+int decl_statement(FILE *file, struct element *element)
+{
+    element->type = DECL_STATEMENT;
+    element->elem_term = NONTERMINAL;
+    element->val.elem_list = NULL;
     /* TODO */
+    return 0;
+}
+
+/* decl_element = ident type [ initial ] */
+int decl_element(FILE *file, struct element *element)
+{
+    element->type = DECL_ELEMENT;
+    element->elem_term = NONTERMINAL;
+    element->val.elem_list = NULL;
+    /* TODO */
+    return 0;
+}
+
+/* initial = "(" "INITIAL" number ")" */
+int initial(FILE *file, struct element *element)
+{
+    element->type = INITIAL;
+    element->elem_term = NONTERMINAL;
+    element->val.elem_list = NULL;
+    /* TODO */
+    return 0;
+}
+
+/* pricedure = proc_statement block_end */
+int procedure(FILE *file, struct element *element)
+{
+    element->type = PROCEDURE;
+    element->elem_term = NONTERMINAL;
+    element->val.elem_list = NULL;
+    /* TODO */
+    return 0;
+}
+
+/* proc_statement = ident ":" "PROCEDURE" [ params ] ";" */
+int proc_statement(FILE *file, struct element *element)
+{
+    element->type = PROC_STATEMENT;
+    element->elem_term = NONTERMINAL;
+    element->val.elem_list = NULL;
+    /* TODO */
+    return 0;
+}
+
+/* params = "(" ident { "," ident } ")" */
+int params(FILE *file, struct element *element)
+{
+    element->type = PARAMS;
+    element->elem_term = NONTERMINAL;
+    element->val.elem_list = NULL;
+    /* TODO */
+    return 0;
+}
+
+
+/* unit = cond | do_block | do_while | do_iter | statement */
+int unit(FILE *file, struct element *element)
+{
+    element->type = UNIT;
+    element->elem_term = NONTERMINAL;
+    element->val.elem_list = NULL;
+    if (add_nonterm(file, element, &cond))
+        return 1;
+    else if (add_nonterm(file, element, &do_block))
+        return 1;
+    else if (add_nonterm(file, element, &do_while))
+        return 1;
+    else if (add_nonterm(file, element, &do_iter))
+        return 1;
+    else if (add_nonterm(file, element, &statement))
+        return 1;
+    return 0;
+}
+
+/* cond = "IF" expr "THEN" unit [ "ELSE" unit ] */
+int cond(FILE *file, struct element *element)
+{
+    element->type = COND;
+    element->elem_term = NONTERMINAL;
+    element->val.elem_list = NULL;
+    if (!add_term(file, element, RW_IF))
+        return 0;
+    if (!add_nonterm(file, element, &expr))
+    {
+        del_last_elem(file, element);
+        return 0;
+    }
+    if (!add_term(file, element, RW_THEN))
+    {
+        free_list(file, element);
+        return 0;
+    }
+    if (!add_nonterm(file, element, &unit))
+    {
+        free_list(file, element);
+        return 0;
+    }
+    if (!add_term(file, element, RW_ELSE))
+        return 1;
+    if (!add_nonterm(file, element, &unit))
+    {
+        del_last_elem(file, element);
+        return 1;
+    }
+    return 1;
+}
+
+/* do_block = "DO" ";" block_end */
+int do_block(FILE *file, struct element *element)
+{
+    element->type = DO_BLOCK;
+    element->elem_term = NONTERMINAL;
+    element->val.elem_list = NULL;
+    if (!add_term(file, element, RW_DO))
+        return 0;
+    if (!add_term(file, element, SEMICOLON))
+    {
+        del_last_elem(file, element);
+        return 0;
+    }
+    if (!add_nonterm(file, element, &block_end))
+    {
+        free_list(file, element);
+        return 0;
+    }
+    return 0;
+}
+
+/* do_while = "DO" "WHILE" expr ";" block_end */
+int do_while(FILE *file, struct element *element)
+{
+    element->type = DO_WHILE;
+    element->elem_term = NONTERMINAL;
+    element->val.elem_list = NULL;
+    if (!add_term(file, element, RW_DO))
+        return 0;
+    if (!add_term(file, element, RW_WHILE))
+    {
+        del_last_elem(file, element);
+        return 0;
+    }
+    if (!add_nonterm(file, element, &expr))
+    {
+        free_list(file, element);
+        return 0;
+    }
+    if (!add_term(file, element, SEMICOLON))
+    {
+        free_list(file, element);
+        return 0;
+    }
+    if (!add_nonterm(file, element, &block_end))
+    {
+        free_list(file, element);
+        return 0;
+    }
+    return 0;
+}
+
+/* do_iter = "DO" ident "=" expr "TO" expr [ "BY" expr ] ";" block_end */
+int do_iter(FILE *file, struct element *element)
+{
+    element->type = DO_ITER;
+    element->elem_term = NONTERMINAL;
+    element->val.elem_list = NULL;
+    if (!add_term(file, element, RW_DO))
+        return 0;
+    if (!add_term(file, element, IDENT))
+    {
+        del_last_elem(file, element);
+        return 0;
+    }
+    if (!add_term(file, element, EQUAL))
+    {
+        free_list(file, element);
+        return 0;
+    }
+    if (!add_nonterm(file, element, &expr))
+    {
+        free_list(file, element);
+        return 0;
+    }
+    if (!add_term(file, element, RW_TO))
+    {
+        free_list(file, element);
+        return 0;
+    }
+    if (!add_nonterm(file, element, &expr))
+    {
+        free_list(file, element);
+        return 0;
+    }
+    if (add_term(file, element, RW_BY)
+        && !add_nonterm(file, element, &expr))
+    {
+        free_list(file, element);
+        return 0;
+    }
+    if (!add_term(file, element, SEMICOLON))
+    {
+        free_list(file, element);
+        return 0;
+    }
+    if (!add_nonterm(file, element, &block_end))
+    {
+        free_list(file, element);
+        return 0;
+    }
+    return 0;
+}
+
+/* block_end = { declaration } { unit } "END" [ ident ] ";" */
+int block_end(FILE *file, struct element *element)
+{
+    element->type = BLOCK_END;
+    element->elem_term = NONTERMINAL;
+    element->val.elem_list = NULL;
+    while (add_nonterm(file, element, &declaration))
+        ;
+    while (add_nonterm(file, element, &unit))
+        ;
+    if (!add_term(file, element, RW_END))
+    {
+        free_list(file, element);
+        return 0;
+    }
+    add_term(file, element, IDENT);
+    if (!add_term(file, element, SEMICOLON))
+    {
+        free_list(file, element);
+        return 0;
+    }
+    return 1;    
+}
+
+/* statement = ident "=" expr | "CALL" ident [ args ] | ";" | "RETURN" [ expr ] */
+int statement(FILE *file, struct element *element)
+{
+    element->type = STATEMENT;
+    element->elem_term = NONTERMINAL;
+    element->val.elem_list = NULL;
+    if (add_term(file, element, IDENT))
+    {
+        if (!add_term(file, element, EQUAL)
+            || !add_nonterm(file, element, &expr))
+        {
+            free_list(file, element);
+            return 0;
+        }
+    }
+    else if (add_term(file, element, RW_CALL))
+    {
+        if (!add_term(file, element, IDENT))
+        {
+            del_last_elem(file, element);
+            return 0;
+        }
+        add_nonterm(file, element, &args);
+        return 1;
+    }
+    else if (add_term(file, element, SEMICOLON))
+        return 1;
+    else if (add_term(file, element, RW_RETURN))
+    {
+        add_nonterm(file, element, &expr);
+        return 1;
+    }
     return 0;
 }
 
@@ -107,8 +412,28 @@ int args(FILE* file, struct element *element)
     element->type = ARGS;
     element->elem_term = NONTERMINAL;
     element->val.elem_list = NULL;
-    /* TODO */
-    return 0;
+    if (!add_term(file, element, PAROP))
+        return 0;
+
+    if (!add_nonterm(file, element, &expr))
+    {
+        del_last_elem(file, element);
+        return 0;
+    }
+    while (add_term(file, element, COMMA))
+    {
+        if (!add_nonterm(file, element, &expr))
+        {
+            free_list(file, element);
+            return 0;
+        }
+    }
+    if (!add_term(file, element, PARCLOSE))
+    {
+        free_list(file, element);
+        return 0;
+    }
+    return 1;
 }
 
 /* rel_op = "<" | ">" | "<=" | ">=" | "<>" | "=" */
