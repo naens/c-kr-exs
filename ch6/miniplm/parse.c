@@ -114,7 +114,7 @@ int module(FILE *file, struct element *element)
         free_list(file, element);
         return 0;
     }
-    return 0;
+    return 1;
 }
 
 /* declaration = decl_statement | procedure */
@@ -123,11 +123,10 @@ int declaration(FILE *file, struct element *element)
     element->type = DECLARATION;
     element->elem_term = NONTERMINAL;
     element->val.elem_list = NULL;
-    if (add_nonterm(file, element, &decl_statement))
-        return 1;
-    else if (add_nonterm(file, element, &procedure))
-        return 1;
-    return 0;
+    if (!add_nonterm(file, element, &decl_statement)
+        && !add_nonterm(file, element, &procedure))
+        return 0;
+    return 1;
 }
 
 /* decl_statement = "DECLARE" decl_element { "," decl_element } ";" */
@@ -136,8 +135,27 @@ int decl_statement(FILE *file, struct element *element)
     element->type = DECL_STATEMENT;
     element->elem_term = NONTERMINAL;
     element->val.elem_list = NULL;
-    /* TODO */
-    return 0;
+    if (!add_term(file, element, RW_DECLARE))
+        return 0;
+    if (!add_nonterm(file, element, &decl_element))
+    {
+        del_last_elem(file, element);
+        return 0;
+    }
+    while (add_term(file, element, COMMA))
+    {
+        if (!add_nonterm(file, element, &decl_element))
+        {
+            free_list(file, element);
+            return 0;
+        }
+    }
+    if (!add_term(file, element, SEMICOLON))
+    {
+        free_list(file, element);
+        return 0;
+    }
+    return 1;
 }
 
 /* decl_element = ident type [ initial ] */
@@ -146,8 +164,15 @@ int decl_element(FILE *file, struct element *element)
     element->type = DECL_ELEMENT;
     element->elem_term = NONTERMINAL;
     element->val.elem_list = NULL;
-    /* TODO */
-    return 0;
+    if (!add_term(file, element, IDENT))
+        return 0;
+    if (!add_term(file, element, TYPE))
+    {
+        del_last_elem(file, element);
+        return 0;
+    }
+    add_nonterm(file, element, &initial);
+    return 1;
 }
 
 /* initial = "(" "INITIAL" number ")" */
@@ -156,8 +181,25 @@ int initial(FILE *file, struct element *element)
     element->type = INITIAL;
     element->elem_term = NONTERMINAL;
     element->val.elem_list = NULL;
-    /* TODO */
-    return 0;
+    if (!add_term(file, element, PAROP))
+        return 0;
+    if (!add_term(file, element, RW_INITIAL))
+    {
+        del_last_elem(file, element);
+        return 0;
+    }
+    if (!add_term(file, element, NUMBER))
+    {
+        free_list(file, element);
+        return 0;
+    }
+    add_nonterm(file, element, &params);
+    if (!add_term(file, element, PARCLOSE))
+    {
+        free_list(file, element);
+        return 0;
+    }
+    return 1;
 }
 
 /* pricedure = proc_statement block_end */
@@ -166,8 +208,14 @@ int procedure(FILE *file, struct element *element)
     element->type = PROCEDURE;
     element->elem_term = NONTERMINAL;
     element->val.elem_list = NULL;
-    /* TODO */
-    return 0;
+    if (!add_nonterm(file, element, &proc_statement))
+        return 0;
+    if (!add_nonterm(file, element, &block_end))
+    {
+        del_last_elem(file, element);
+        return 0;
+    }
+    return 1;
 }
 
 /* proc_statement = ident ":" "PROCEDURE" [ params ] ";" */
@@ -176,8 +224,25 @@ int proc_statement(FILE *file, struct element *element)
     element->type = PROC_STATEMENT;
     element->elem_term = NONTERMINAL;
     element->val.elem_list = NULL;
-    /* TODO */
-    return 0;
+    if (!add_term(file, element, IDENT))
+        return 0;
+    if (!add_term(file, element, SEMICOLON))
+    {
+        del_last_elem(file, element);
+        return 0;
+    }
+    if (!add_term(file, element, RW_PROCEDURE))
+    {
+        free_list(file, element);
+        return 0;
+    }
+    add_nonterm(file, element, &params);
+    if (!add_term(file, element, SEMICOLON))
+    {
+        free_list(file, element);
+        return 0;
+    }
+    return 1;
 }
 
 /* params = "(" ident { "," ident } ")" */
@@ -186,8 +251,27 @@ int params(FILE *file, struct element *element)
     element->type = PARAMS;
     element->elem_term = NONTERMINAL;
     element->val.elem_list = NULL;
-    /* TODO */
-    return 0;
+    if (!add_term(file, element, PAROP))
+        return 0;
+    if (!add_term(file, element, IDENT))
+    {
+        del_last_elem(file, element);
+        return 0;
+    }
+    while (add_term(file, element, COMMA))
+    {
+        if (!add_term(file, element, IDENT))
+        {
+            free_list(file, element);
+            return 0;
+        }
+    }
+    if (!add_term(file, element, PARCLOSE))
+    {
+        free_list(file, element);
+        return 0;
+    }
+    return 1;
 }
 
 
@@ -197,17 +281,13 @@ int unit(FILE *file, struct element *element)
     element->type = UNIT;
     element->elem_term = NONTERMINAL;
     element->val.elem_list = NULL;
-    if (add_nonterm(file, element, &cond))
-        return 1;
-    else if (add_nonterm(file, element, &do_block))
-        return 1;
-    else if (add_nonterm(file, element, &do_while))
-        return 1;
-    else if (add_nonterm(file, element, &do_iter))
-        return 1;
-    else if (add_nonterm(file, element, &statement))
-        return 1;
-    return 0;
+    if (!add_nonterm(file, element, &cond)
+        && !add_nonterm(file, element, &do_block)
+        && !add_nonterm(file, element, &do_while)
+        && !add_nonterm(file, element, &do_iter)
+        && !add_nonterm(file, element, &statement))
+        return 0;
+    return 1;
 }
 
 /* cond = "IF" expr "THEN" unit [ "ELSE" unit ] */
@@ -261,7 +341,7 @@ int do_block(FILE *file, struct element *element)
         free_list(file, element);
         return 0;
     }
-    return 0;
+    return 1;
 }
 
 /* do_while = "DO" "WHILE" expr ";" block_end */
@@ -292,7 +372,7 @@ int do_while(FILE *file, struct element *element)
         free_list(file, element);
         return 0;
     }
-    return 0;
+    return 1;
 }
 
 /* do_iter = "DO" ident "=" expr "TO" expr [ "BY" expr ] ";" block_end */
@@ -344,7 +424,7 @@ int do_iter(FILE *file, struct element *element)
         free_list(file, element);
         return 0;
     }
-    return 0;
+    return 1;
 }
 
 /* block_end = { declaration } { unit } "END" [ ident ] ";" */
@@ -480,7 +560,6 @@ int expr(FILE *file, struct element *element)
     }
     else
         return 1;
-        
 }
 
 /* arithm = {term ( "+" | "-" ) } term */
