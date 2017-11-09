@@ -474,15 +474,11 @@ int statement(FILE *file, struct element *element)
             return 0;
         }
         add_nonterm(file, element, &args);
-        return 1;
     }
-    else if (add_term(file, element, SEMICOLON))
-        return 1;
     else if (add_term(file, element, RW_RETURN))
-    {
         add_nonterm(file, element, &expr);
+    if (add_term(file, element, SEMICOLON))
         return 1;
-    }
     return 0;
 }
 
