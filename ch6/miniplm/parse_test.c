@@ -9,6 +9,36 @@ int (*name_to_pfun(char *fname))(FILE*, struct element*)
 {
     if (strcmp(fname, "start") == 0)
         return &start;
+    else if (strcmp(fname, "module") == 0)
+        return &module;
+    else if (strcmp(fname, "declaration") == 0)
+        return &declaration;
+    else if (strcmp(fname, "decl_statement") == 0)
+        return &decl_statement;
+    else if (strcmp(fname, "decl_element") == 0)
+        return &decl_element;
+    else if (strcmp(fname, "initial") == 0)
+        return &initial;
+    else if (strcmp(fname, "procedure") == 0)
+        return &procedure;
+    else if (strcmp(fname, "proc_statement") == 0)
+        return &proc_statement;
+    else if (strcmp(fname, "params") == 0)
+        return &params;
+    else if (strcmp(fname, "unit") == 0)
+        return &unit;
+    else if (strcmp(fname, "cond") == 0)
+        return &cond;
+    else if (strcmp(fname, "do_block") == 0)
+        return &do_block;
+    else if (strcmp(fname, "do_while") == 0)
+        return &do_while;
+    else if (strcmp(fname, "do_iter") == 0)
+        return &do_iter;
+    else if (strcmp(fname, "block_end") == 0)
+        return &block_end;
+    else if (strcmp(fname, "statement") == 0)
+        return &statement;
     else if (strcmp(fname, "args") == 0)
         return &args;
     else if (strcmp(fname, "rel_op") == 0)

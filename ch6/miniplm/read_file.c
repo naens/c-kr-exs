@@ -367,49 +367,49 @@ int sprint_element(char *buf, struct element *element)
             n = sprintf(buf, "{\"number\":\"%d\"}", element->val.num);
             break;
         case TYPE:
-            n = sprintf(buf, "<type:%s>", element->val.str);
+            n = sprintf(buf, "{\"type\":\"%s\"}", element->val.str);
             break;
         case STRING_LIT:
-            n = sprintf(buf, "<quote:%s>", element->val.str);
+            n = sprintf(buf, "{\"quote\":\"%s\"}", element->val.str);
             break;
         case RW_DECLARE:
-            n = sprintf(buf, "<declare>");
+            n = sprintf(buf, "\"declare\"");
             break;
         case RW_PROCEDURE:
-            n = sprintf(buf, "<procedure>");
+            n = sprintf(buf, "\"procedure\"");
             break;
         case RW_TO:
-            n = sprintf(buf, "<to>");
+            n = sprintf(buf, "\"to\"");
             break;
         case RW_BY:
-            n = sprintf(buf, "<by>");
+            n = sprintf(buf, "\"by\"");
             break;
         case RW_INITIAL:
-            n = sprintf(buf, "<initial>");
+            n = sprintf(buf, "\"initial\"");
             break;
         case RW_DO:
-            n = sprintf(buf, "<do>");
+            n = sprintf(buf, "\"do\"");
             break;
         case RW_WHILE:
-            n = sprintf(buf, "<while>");
+            n = sprintf(buf, "\"while\"");
             break;
         case RW_END:
-            n = sprintf(buf, "<end>");
+            n = sprintf(buf, "\"end\"");
             break;
         case RW_IF:
-            n = sprintf(buf, "<if>");
+            n = sprintf(buf, "\"if\"");
             break;
         case RW_THEN:
-            n = sprintf(buf, "<then>");
+            n = sprintf(buf, "\"then\"");
             break;
         case RW_ELSE:
-            n = sprintf(buf, "<else>");
+            n = sprintf(buf, "\"else\"");
             break;
         case RW_CALL:
-            n = sprintf(buf, "<call>");
+            n = sprintf(buf, "\"call\"");
             break;
         case RW_RETURN:
-            n = sprintf(buf, "<return>");
+            n = sprintf(buf, "\"return\"");
             break;
         case IDENT:
             n = sprintf(buf, "{\"ident\":\"%s\"}", element->val.str);
@@ -424,6 +424,57 @@ int sprint_element(char *buf, struct element *element)
         n += sprintf(buf + n, "{");
         switch (element->type)
         {
+        case START:
+            n += sprintf(buf + n, "\"start\"");
+            break;
+        case MODULE:
+            n += sprintf(buf + n, "\"module\"");
+            break;
+        case DECLARATION:
+            n += sprintf(buf + n, "\"declaration\"");
+            break;
+        case DECL_STATEMENT:
+            n += sprintf(buf + n, "\"decl_statement\"");
+            break;
+        case DECL_ELEMENT:
+            n += sprintf(buf + n, "\"decl_element\"");
+            break;
+        case INITIAL:
+            n += sprintf(buf + n, "\"initial\"");
+            break;
+        case PROCEDURE:
+            n += sprintf(buf + n, "\"procedure\"");
+            break;
+        case PROC_STATEMENT:
+            n += sprintf(buf + n, "\"proc_statement\"");
+            break;
+        case PARAMS:
+            n += sprintf(buf + n, "\"params\"");
+            break;
+        case UNIT:
+            n += sprintf(buf + n, "\"unit\"");
+            break;
+        case COND:
+            n += sprintf(buf + n, "\"cond\"");
+            break;
+        case DO_BLOCK:
+            n += sprintf(buf + n, "\"do_block\"");
+            break;
+        case DO_WHILE:
+            n += sprintf(buf + n, "\"do_while\"");
+            break;
+        case DO_ITER:
+            n += sprintf(buf + n, "\"do_iter\"");
+            break;
+        case BLOCK_END:
+            n += sprintf(buf + n, "\"block_end\"");
+            break;
+        case STATEMENT:
+            n += sprintf(buf + n, "\"statement\"");
+            break;
+        case ARGS:
+            n += sprintf(buf + n, "\"args\"");
+            break;
         case REL_OP:
             n += sprintf(buf + n, "\"rel_op\"");
             break;

@@ -19,7 +19,8 @@ do_iter = "DO" ident "=" expr "TO" expr [ "BY" expr ] ";" block_end
 
 block_end = { declaration } { unit } "END" [ ident ] ";"
 
-statement = ident "=" expr | "CALL" ident [ args ]  | ";" | "RETURN" [ expr ]
+statement = ident "=" expr ";" | "CALL" ident [ args ]  ";" | ";"
+           | "RETURN" [ expr ] ";"
 args = "(" expr { "," expr } ")"
 
 rel_op = "<" | ">" | "<=" | ">=" | "<>" | "="
