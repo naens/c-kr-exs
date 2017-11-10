@@ -119,7 +119,7 @@ int main(int argc, char **argv)
         return 7;
     }
 
-    char buf[0x100];
+    char buf[0x10000];
     sprint_element(buf, &element);
     printf("%s\n", buf);
 
