@@ -18,7 +18,7 @@ do
     echo "Enter an expression:"
     read input
 
-    result=$(./parse_test "$start" "$input" 2>1)
+    result=$(./parse_test "$start" "$input" 2>&1)
 
     echo start="$start" input="$input"
     echo result="$result"
