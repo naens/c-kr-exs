@@ -41,6 +41,8 @@ int read_token(FILE*, struct element*);
 
 void unread_token(FILE*, struct element*);
 
-int sprint_element(char*, struct element*);
+int sprint_elem_json(char*, struct element*, int);
+
+int sprint_elem_str(char*, struct element*);
 
 #endif /* MINIPLM_H */

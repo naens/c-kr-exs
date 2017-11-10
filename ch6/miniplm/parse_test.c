@@ -120,7 +120,7 @@ int main(int argc, char **argv)
     }
 
     char buf[0x10000];
-    sprint_element(buf, &element);
+    sprint_elem_json(buf, &element, 2);
     printf("%s\n", buf);
 
     if (fstr != NULL)

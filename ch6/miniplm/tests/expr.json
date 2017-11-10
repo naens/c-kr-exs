@@ -18,37 +18,26 @@
     "input": "7",
     "result": {
       "term": [{
-        "factor": [
-          { "number": "7" } ] }] } },
+        "factor": [ "7" ] }] } },
   { "start": "term",
     "input": "-123",
     "result": {
-      "term": [{
-        "factor": [
-          "-",
-          { "number": "123" } ] }] } },
+      "term": [ {
+        "factor": [ "-", "123" ] },
   { "start": "term",
     "input": "8*-9",
-    "result": {
-      "term": [
-        { "factor": [
-            { "number": "8" } ] },
+    "result": 
+      { "term": [ {
+          "factor": [ "8" ] },
         "*",
-        { "factor": [
-            "-",
-            { "number": "9" } ] } ] } },
+        { "factor": [ "-", "9" ] },
   { "start": "term",
     "input": "-8*79",
     "result": {
       "term": [
-        { "factor": [
-            "-",
-            { "number": "8" }
-          ]
-        },
+        { "factor": [ "-", "8" ] },
         "*",
-        { "factor": [
-            { "number": "79" } ] } ] } },
+        { "factor": [ "79" ] },
   { "start": "arithm",
     "input": "-8",
     "result": {

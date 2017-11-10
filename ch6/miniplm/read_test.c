@@ -21,7 +21,7 @@ int main(int argc, char **argv)
     while ((res = read_token(f, &element)) != EOF)
     {
         char buf[0x100];
-        sprint_element(buf, &element);
+        sprint_elem_json(buf, &element, 1);
         printf("%s\n", buf);
     }
 
