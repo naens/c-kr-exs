@@ -1,0 +1,55 @@
+[
+  {
+    "start": "cond",
+    "input": "if 88 then ;",
+    "result": {
+      "cond": [
+        "if",
+        {
+          "expr": [
+            "88"
+          ]
+        },
+        "then",
+        {
+          "unit": [
+            ";"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "start": "cond",
+    "input": "if 8",
+    "result": "bad input"
+  },
+  {
+    "start": "cond",
+    "input": "if a<=(44-e) then call fr(e); else f=e-33*y;",
+    "result": {
+      "cond": [
+        "if",
+        {
+          "expr": [
+            "a",
+            "< =",
+            "( 44 - e )"
+          ]
+        },
+        "then",
+        {
+          "unit": [
+            "call fr ( e ) ;"
+          ]
+        },
+        "else",
+        {
+          "unit": [
+            "f = e - 33 * y ;"
+          ]
+        }
+      ]
+    }
+  }
+]
