@@ -6,32 +6,47 @@ echo "Enter a module name:"
 read name
 str="["
 first=true
+start=""
 while true
 do
-    if [ "$first" = "false" ]
+    if [ "$start" = "" ]
     then
-        str="$str,"
+        echo "Enter a nonterminal:"
+    else
+        echo "Enter a nonterminal (currently $start):"
     fi
-    echo "Enter a nonterminal:"
-    read start
+    read s
+    if [ -n "$s" ]
+    then
+        start=$s
+    fi
 
     echo "Enter an expression:"
     read input
+    if [ -z "$input" ]
+    then
+        break
+    fi
+
+    if [ "$first" = "false" ]
+    then
+        str="$str,"$'\n'
+    fi
 
     result=$(./parse_test "$start" "$input" 2>&1)
 
     echo start="$start" input="$input"
     echo result="$result"
+    str=$str"{\"start\": \"$start\","$'\n'
+    str=$str" \"input\": \"$input\","$'\n'
+    str=$str" \"result\": $result}"
 
-    echo "Enter one more item(y/n)?"
-    read answer
-    echo "Your answer is \"$answer\""
-    if [ "$answer" = "n" ]
-    then
-        break
-    fi
     first=false
 done
+str="$str]"
 
 echo "Finished entering tests for module $name"
+echo $str
+#echo "$str" >> "tests/$name.json"
+echo "$str" | jq . >> "tests/$name.json"
  
