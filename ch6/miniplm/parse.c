@@ -18,17 +18,18 @@ void add_to_elem_list(struct element *element, struct element *subelement)
 /* free all allocated structures and unread all elements */
 void free_list(FILE *file, struct element *element)
 {
-    struct elem_list **ppcurr = &element->val.elem_list;
-    while (*ppcurr != NULL)
+    struct elem_list *pcurr = element->val.elem_list;
+    while (pcurr != NULL)
     {
-        if ((*ppcurr)->element->elem_term == TERMINAL)
-            unread_token(file, (*ppcurr)->element);
+        if (pcurr->element->elem_term == TERMINAL)
+            unread_token(file, pcurr->element);
         else
-            free_list(file, (*ppcurr)->element);
-        struct elem_list *tmp = *ppcurr;
-        ppcurr = &(*ppcurr)->next;
+            free_list(file, pcurr->element);
+        struct elem_list *tmp = pcurr;
+        pcurr = pcurr->next;
         free(tmp);
     }
+    element->val.elem_list = NULL;
 }
 
 /* delete last element from val.elem_list */
