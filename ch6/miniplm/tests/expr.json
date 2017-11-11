@@ -171,5 +171,21 @@
     "start": "factor",
     "input": "-do",
     "result": "bad input"
+  },
+  {
+    "start": "factor",
+    "input": "-(a+3*(4-t))",
+    "result": {
+      "factor": [
+        "-",
+        "(",
+        {
+          "expr": [
+            "a + 3 * ( 4 - t )"
+          ]
+        },
+        ")"
+      ]
+    }
   }
 ]
