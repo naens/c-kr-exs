@@ -20,7 +20,9 @@ do
 	start=$(echo "$str" | $jq .start)
 	input=$(echo "$str" | $jq .input)
 	result=$(echo "$str" | $jq -c .result)
-        res=$(eval ./parse_test $start $input 2>&1)
+	start=$(echo "$start" | sed -e 's/^.*"\(.*\)".*$/\1/')
+	input=$(echo "$input" | sed -e 's/^.*"\(.*\)".*$/\1/')
+        res=$(./parse_test $start "$input" 2>&1)
         if [ "$?" -ne 0 ] && [ "$result" = "bad input" ]
         then
              printf 'OK:%14s\t%-12s====>\tbad input\n' "$start" "$input"
