@@ -1,0 +1,73 @@
+[
+  {
+    "start": "do_iter",
+    "input": "do i = 1 to 10; call pr$num(i); end;",
+    "result": {
+      "do_iter": [
+        "do",
+        {
+          "ident": "i"
+        },
+        "=",
+        {
+          "expr": [
+            "1"
+          ]
+        },
+        "to",
+        {
+          "expr": [
+            "10"
+          ]
+        },
+        ";",
+        {
+          "block_end": [
+            "call prnum ( i ) ;",
+            "end",
+            ";"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "start": "do_iter",
+    "input": "do abc = 0 to 100 by 4; r = r + abc; call pr$status; end;",
+    "result": {
+      "do_iter": [
+        "do",
+        {
+          "ident": "abc"
+        },
+        "=",
+        {
+          "expr": [
+            "0"
+          ]
+        },
+        "to",
+        {
+          "expr": [
+            "100"
+          ]
+        },
+        "by",
+        {
+          "expr": [
+            "4"
+          ]
+        },
+        ";",
+        {
+          "block_end": [
+            "r = r + abc ;",
+            "call prstatus ;",
+            "end",
+            ";"
+          ]
+        }
+      ]
+    }
+  }
+]

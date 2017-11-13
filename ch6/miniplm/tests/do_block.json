@@ -1,0 +1,76 @@
+[
+  {
+    "start": "do_block",
+    "input": "do; end;",
+    "result": {
+      "do_block": [
+        "do",
+        ";",
+        {
+          "block_end": [
+            "end",
+            ";"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "start": "do_block",
+    "input": "do; ; end;",
+    "result": {
+      "do_block": [
+        "do",
+        ";",
+        {
+          "block_end": [
+            ";",
+            "end",
+            ";"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "start": "do_block",
+    "input": "do; call abc; d = d + 1; end;",
+    "result": {
+      "do_block": [
+        "do",
+        ";",
+        {
+          "block_end": [
+            "call abc ;",
+            "d = d + 1 ;",
+            "end",
+            ";"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "start": "do_block",
+    "input": "do toto; end;",
+    "result": "bad input"
+  },
+  {
+    "start": "do_block",
+    "input": "do; d = e*(2-r); call d(4); end;",
+    "result": {
+      "do_block": [
+        "do",
+        ";",
+        {
+          "block_end": [
+            "d = e * ( 2 - r ) ;",
+            "call d ( 4 ) ;",
+            "end",
+            ";"
+          ]
+        }
+      ]
+    }
+  }
+]

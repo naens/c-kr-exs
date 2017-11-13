@@ -1,0 +1,62 @@
+[
+  {
+    "start": "block_end",
+    "input": "end;",
+    "result": {
+      "block_end": [
+        "end",
+        ";"
+      ]
+    }
+  },
+  {
+    "start": "block_end",
+    "input": "; end;",
+    "result": {
+      "block_end": [
+        {
+          "unit": [
+            ";"
+          ]
+        },
+        "end",
+        ";"
+      ]
+    }
+  },
+  {
+    "start": "block_end",
+    "input": "call pr; end;",
+    "result": {
+      "block_end": [
+        {
+          "unit": [
+            "call pr ;"
+          ]
+        },
+        "end",
+        ";"
+      ]
+    }
+  },
+  {
+    "start": "block_end",
+    "input": "c = c + 1; call e(3); end;",
+    "result": {
+      "block_end": [
+        {
+          "unit": [
+            "c = c + 1 ;"
+          ]
+        },
+        {
+          "unit": [
+            "call e ( 3 ) ;"
+          ]
+        },
+        "end",
+        ";"
+      ]
+    }
+  }
+]

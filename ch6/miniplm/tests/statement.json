@@ -1,0 +1,122 @@
+[
+  {
+    "start": "statement",
+    "input": ";",
+    "result": {
+      "statement": [
+        ";"
+      ]
+    }
+  },
+  {
+    "start": "statement",
+    "input": "a = b;",
+    "result": {
+      "statement": [
+        {
+          "ident": "a"
+        },
+        "=",
+        {
+          "expr": [
+            "b"
+          ]
+        },
+        ";"
+      ]
+    }
+  },
+  {
+    "start": "statement",
+    "input": "a = a + 1;",
+    "result": {
+      "statement": [
+        {
+          "ident": "a"
+        },
+        "=",
+        {
+          "expr": [
+            "a + 1"
+          ]
+        },
+        ";"
+      ]
+    }
+  },
+  {
+    "start": "statement",
+    "input": "a = b * min(r, 14);",
+    "result": {
+      "statement": [
+        {
+          "ident": "a"
+        },
+        "=",
+        {
+          "expr": [
+            "b * min ( r , 14 )"
+          ]
+        },
+        ";"
+      ]
+    }
+  },
+  {
+    "start": "statement",
+    "input": "call doit;",
+    "result": {
+      "statement": [
+        "call",
+        {
+          "ident": "doit"
+        },
+        ";"
+      ]
+    }
+  },
+  {
+    "start": "statement",
+    "input": "call pr$buf(uppercase(p$str));",
+    "result": {
+      "statement": [
+        "call",
+        {
+          "ident": "prbuf"
+        },
+        {
+          "args": [
+            "(",
+            "uppercase ( pstr )",
+            ")"
+          ]
+        },
+        ";"
+      ]
+    }
+  },
+  {
+    "start": "statement",
+    "input": "call abcd(1, 3*3, b(x));",
+    "result": {
+      "statement": [
+        "call",
+        {
+          "ident": "abcd"
+        },
+        {
+          "args": [
+            "(",
+            "1",
+            ",",
+            "3 * 3",
+            ",",
+            "b ( x )",
+            ")"
+          ]
+        },
+        ";"
+      ]
+    }
+  }
+]
