@@ -1,0 +1,163 @@
+[
+  {
+    "start": "proc_statement",
+    "input": "d: procedure;",
+    "result": {
+      "proc_statement": [
+        {
+          "ident": "d"
+        },
+        ":",
+        "procedure",
+        ";"
+      ]
+    }
+  },
+  {
+    "start": "proc_statement",
+    "input": "proc: procedure byte;",
+    "result": {
+      "proc_statement": [
+        {
+          "ident": "proc"
+        },
+        ":",
+        "procedure",
+        {
+          "type": "byte"
+        },
+        ";"
+      ]
+    }
+  },
+  {
+    "start": "proc_statement",
+    "input": "str$eq: procedure(p$s1, p$s2) byte;",
+    "result": {
+      "proc_statement": [
+        {
+          "ident": "streq"
+        },
+        ":",
+        "procedure",
+        {
+          "params": [
+            "(",
+            "ps1",
+            ",",
+            "ps2",
+            ")"
+          ]
+        },
+        {
+          "type": "byte"
+        },
+        ";"
+      ]
+    }
+  },
+  {
+    "start": "proc_statement",
+    "input": "ddd: procedure(a,b,c,d,e);",
+    "result": {
+      "proc_statement": [
+        {
+          "ident": "ddd"
+        },
+        ":",
+        "procedure",
+        {
+          "params": [
+            "(",
+            "a",
+            ",",
+            "b",
+            ",",
+            "c",
+            ",",
+            "d",
+            ",",
+            "e",
+            ")"
+          ]
+        },
+        ";"
+      ]
+    }
+  },
+  {
+    "start": "procedure",
+    "input": "proc: procedure(c); declare c byte; call wr$con(c); end proc;",
+    "result": {
+      "procedure": [
+        {
+          "proc_statement": [
+            "proc",
+            ":",
+            "procedure",
+            "( c )",
+            ";"
+          ]
+        },
+        {
+          "block_end": [
+            "declare c byte ;",
+            "call wrcon ( c ) ;",
+            "end",
+            "proc",
+            ";"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "start": "procedure",
+    "input": "p: procedure; end;",
+    "result": {
+      "procedure": [
+        {
+          "proc_statement": [
+            "p",
+            ":",
+            "procedure",
+            ";"
+          ]
+        },
+        {
+          "block_end": [
+            "end",
+            ";"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "start": "procedure",
+    "input": "baba: procedure(d,e) integer; declare (d,e) byte; return d + e; end baba;",
+    "result": {
+      "procedure": [
+        {
+          "proc_statement": [
+            "baba",
+            ":",
+            "procedure",
+            "( d , e )",
+            "integer",
+            ";"
+          ]
+        },
+        {
+          "block_end": [
+            "declare ( d , e ) byte ;",
+            "return d + e ;",
+            "end",
+            "baba",
+            ";"
+          ]
+        }
+      ]
+    }
+  }
+]
