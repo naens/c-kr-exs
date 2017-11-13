@@ -1,6 +1,6 @@
 prog$fib:
 do;
-    declare val integer initial 7;
+    declare val integer initial (7);
 
     fib: procedure(n);
         declare n integer;
