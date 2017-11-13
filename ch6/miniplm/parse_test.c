@@ -59,15 +59,24 @@ int (*name_to_pfun(char *fname))(FILE*, struct element*)
  }
 
 /* usage:
-    * <file>
-    * <start> {<input>}
+    * -f <file> [depth]
+    * <start> <input> [depth]
  */
 int main(int argc, char **argv)
 {
     FILE *file;
     char *fstr = NULL;
     int (*pstart)(FILE*, struct element*);
-    if (argc == 2)		/* argv[1]: file, start from start */
+    int depth = 2;
+    if (argc < 3 || argc > 4)
+    {
+        fprintf(stderr, "usage:\n"
+           "    -f <file> [depth]\n"
+           "or <start> <input> [depth]\n");
+        return -1;
+
+    }
+    if (strcmp(argv[1], "-f") == 0) /* argv[2]: file, [argv[3]: depth] */
     {
         file = fopen(argv[1], "r");
         if  (file == NULL)
@@ -76,44 +85,27 @@ int main(int argc, char **argv)
             return 1;
         }
         pstart = &start;
+        if (argc == 4)
+            depth = atol(argv[3]);
     }
-    else if (argc >= 3)		/* start from argv[1], file from rest */
-    {
-        char *fname = argv[1];
-        pstart = name_to_pfun(fname);
+    else		/* start from argv[1], input in argv[2] */
+    {                   /* depth optional in argv[3] */
+        char *start = argv[1];
+        pstart = name_to_pfun(start);
         if (pstart == NULL)
         {
-            fprintf(stderr, "bad function name: '%s'\n", fname);
+            fprintf(stderr, "bad function name: '%s'\n", start);
             return 2;
         }
-        int len = 0;
-        char **ps = &argv[2];
-        while (*ps != NULL)
-            len += 1 + strlen(*(ps++));
-        fstr = malloc(len);
-        char *s = fstr;
-        char *t;
-        for (int i = 2; i < argc; i++)
-        {
-            t = argv[i];
-            while (*t != '\0')
-                *s++ = *t++;
-            if (i < argc - 1)
-                *s++ = ' ';
-        }
-        *s = 0;
-//        printf("input string: '%s', starting from %s\n", fstr, fname);
-        file = fmemopen(fstr, len, "r");
+        char *instr = argv[2];
+        file = fmemopen(instr, strlen(instr), "r");
         if (file == NULL)
         {
             fprintf(stderr, "fmemopen error\n");
             return 5;
         }
-    }
-    else
-    {
-        fprintf(stderr, "usage:\n\t<file>\n or\t<start function> {<input>}\n\n");
-        return 3;
+        if (argc == 4)
+            depth = atol(argv[3]);
     }
     struct element element;
     int res = (*pstart)(file, &element);
@@ -124,7 +116,7 @@ int main(int argc, char **argv)
     }
 
     char buf[0x10000];
-    sprint_elem_json(buf, &element, 2);
+    sprint_elem_json(buf, &element, depth);
     printf("%s\n", buf);
 
     if (fstr != NULL)
