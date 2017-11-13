@@ -78,7 +78,7 @@ int main(int argc, char **argv)
     }
     if (strcmp(argv[1], "-f") == 0) /* argv[2]: file, [argv[3]: depth] */
     {
-        file = fopen(argv[1], "r");
+        file = fopen(argv[2], "r");
         if  (file == NULL)
         {
             fprintf(stderr, "error opening file '%s'\n", argv[1]);
