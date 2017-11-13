@@ -8,7 +8,7 @@ decl_fact = "(" ident { "," ident } ")" type [ initial ]
 initial = "INITIAL" "(" number ")" 
 
 procedure = proc_statement block_end
-proc_statement= ident ":" "PROCEDURE" [ params ] ";"
+proc_statement= ident ":" "PROCEDURE" [ params ] [ type ]";"
 params = "(" ident { "," ident } ")"
 
 unit = cond | do_block | do_while | do_iter | statement
