@@ -182,9 +182,9 @@ int initial(FILE *file, struct element *element)
     element->type = INITIAL;
     element->elem_term = NONTERMINAL;
     element->val.elem_list = NULL;
-    if (!add_term(file, element, PAROP))
-        return 0;
     if (!add_term(file, element, RW_INITIAL))
+        return 0;
+    if (!add_term(file, element, PAROP))
     {
         del_last_elem(file, element);
         return 0;
