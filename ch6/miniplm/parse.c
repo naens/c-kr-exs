@@ -189,6 +189,7 @@ int decl_unfact(FILE *file, struct element *element)
     add_nonterm(file, element, &initial);
     return 1;
 }
+
 /* decl_fact = "(" ident { "," ident } ")" type [ initial ] */
 int decl_fact(FILE *file, struct element *element)
 {
@@ -275,7 +276,7 @@ int proc_statement(FILE *file, struct element *element)
     element->val.elem_list = NULL;
     if (!add_term(file, element, IDENT))
         return 0;
-    if (!add_term(file, element, SEMICOLON))
+    if (!add_term(file, element, COLON))
     {
         del_last_elem(file, element);
         return 0;
@@ -286,6 +287,7 @@ int proc_statement(FILE *file, struct element *element)
         return 0;
     }
     add_nonterm(file, element, &params);
+    add_term(file, element, TYPE);
     if (!add_term(file, element, SEMICOLON))
     {
         free_list(file, element);
