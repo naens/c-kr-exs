@@ -1,0 +1,100 @@
+[
+  {
+    "start": "unit",
+    "input": "if a > 1 then call x;",
+    "result": {
+      "unit": [
+        {
+          "cond": [
+            "if",
+            "a > 1",
+            "then",
+            "call x ;"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "start": "unit",
+    "input": "do r = abc to 33; end;",
+    "result": {
+      "unit": [
+        {
+          "do_iter": [
+            "do",
+            "r",
+            "=",
+            "abc",
+            "to",
+            "33",
+            ";",
+            "end ;"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "start": "unit",
+    "input": "do while variable <> constant; call wait; call pr$status(variable, constant); end;",
+    "result": {
+      "unit": [
+        {
+          "do_while": [
+            "do",
+            "while",
+            "variable < > constant",
+            ";",
+            "call wait ; call prstatus ( variable , constant ) ; end ;"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "start": "unit",
+    "input": "x = x + 1;",
+    "result": {
+      "unit": [
+        {
+          "statement": [
+            "x",
+            "=",
+            "x + 1",
+            ";"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "start": "unit",
+    "input": "call fun(x*(1+2));",
+    "result": {
+      "unit": [
+        {
+          "statement": [
+            "call",
+            "fun",
+            "( x * ( 1 + 2 ) )",
+            ";"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "start": "unit",
+    "input": ";",
+    "result": {
+      "unit": [
+        {
+          "statement": [
+            ";"
+          ]
+        }
+      ]
+    }
+  }
+]

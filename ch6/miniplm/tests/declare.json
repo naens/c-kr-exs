@@ -1,0 +1,118 @@
+[
+  {
+    "start": "decl_element",
+    "input": "x byte",
+    "result": {
+      "decl_element": [
+        {
+          "ident": "x"
+        },
+        {
+          "type": "byte"
+        }
+      ]
+    }
+  },
+  {
+    "start": "decl_element",
+    "input": "x byte initial(42)",
+    "result": {
+      "decl_element": [
+        {
+          "ident": "x"
+        },
+        {
+          "type": "byte"
+        },
+        {
+          "initial": [
+            "initial",
+            "(",
+            "42",
+            ")"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "start": "decl_statement",
+    "input": "declare abcd byte;",
+    "result": {
+      "decl_statement": [
+        "declare",
+        {
+          "decl_element": [
+            "abcd",
+            "byte"
+          ]
+        },
+        ";"
+      ]
+    }
+  },
+  {
+    "start": "decl_statement",
+    "input": "declare x byte initial(42);",
+    "result": {
+      "decl_statement": [
+        "declare",
+        {
+          "decl_element": [
+            "x",
+            "byte",
+            "initial ( 42 )"
+          ]
+        },
+        ";"
+      ]
+    }
+  },
+  {
+    "start": "decl_statement",
+    "input": "declare x byte, y integer;",
+    "result": {
+      "decl_statement": [
+        "declare",
+        {
+          "decl_element": [
+            "x",
+            "byte"
+          ]
+        },
+        ",",
+        {
+          "decl_element": [
+            "y",
+            "integer"
+          ]
+        },
+        ";"
+      ]
+    }
+  },
+  {
+    "start": "decl_statement",
+    "input": "declare a integer initial (0), b byte;",
+    "result": {
+      "decl_statement": [
+        "declare",
+        {
+          "decl_element": [
+            "a",
+            "integer",
+            "initial ( 0 )"
+          ]
+        },
+        ",",
+        {
+          "decl_element": [
+            "b",
+            "byte"
+          ]
+        },
+        ";"
+      ]
+    }
+  }
+]

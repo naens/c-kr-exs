@@ -1,0 +1,86 @@
+[
+  {
+    "start": "block_end",
+    "input": "declare x byte; x = y + 1; end;",
+    "result": {
+      "block_end": [
+        {
+          "declaration": [
+            "declare x byte ;"
+          ]
+        },
+        {
+          "unit": [
+            "x = y + 1 ;"
+          ]
+        },
+        "end",
+        ";"
+      ]
+    }
+  },
+  {
+    "start": "block_end",
+    "input": "declare y integer initial (8), x byte; end;",
+    "result": {
+      "block_end": [
+        {
+          "declaration": [
+            "declare y integer initial ( 8 ) , x byte ;"
+          ]
+        },
+        "end",
+        ";"
+      ]
+    }
+  },
+  {
+    "start": "block_end",
+    "input": "declare x byte; declare y byte initial (8); x = z + y; call print(x); end;",
+    "result": {
+      "block_end": [
+        {
+          "declaration": [
+            "declare x byte ;"
+          ]
+        },
+        {
+          "declaration": [
+            "declare y byte initial ( 8 ) ;"
+          ]
+        },
+        {
+          "unit": [
+            "x = z + y ;"
+          ]
+        },
+        {
+          "unit": [
+            "call print ( x ) ;"
+          ]
+        },
+        "end",
+        ";"
+      ]
+    }
+  },
+  {
+    "start": "do_block",
+    "input": "do; declare x byte; x = y * y; call println(x); end;",
+    "result": {
+      "do_block": [
+        "do",
+        ";",
+        {
+          "block_end": [
+            "declare x byte ;",
+            "x = y * y ;",
+            "call println ( x ) ;",
+            "end",
+            ";"
+          ]
+        }
+      ]
+    }
+  }
+]
