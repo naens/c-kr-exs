@@ -6,6 +6,8 @@ int module(FILE *file, struct element *element);
 int declaration(FILE *file, struct element *element);
 int decl_statement(FILE *file, struct element *element);
 int decl_element(FILE *file, struct element *element);
+int decl_unfact(FILE *file, struct element *element);
+int decl_fact(FILE *file, struct element *element);
 int initial(FILE *file, struct element *element);
 int procedure(FILE *file, struct element *element);
 int proc_statement(FILE *file, struct element *element);

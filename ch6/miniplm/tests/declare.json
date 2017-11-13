@@ -1,9 +1,9 @@
 [
   {
-    "start": "decl_element",
+    "start": "decl_unfact",
     "input": "x byte",
     "result": {
-      "decl_element": [
+      "decl_unfact": [
         {
           "ident": "x"
         },
@@ -14,15 +14,15 @@
     }
   },
   {
-    "start": "decl_element",
-    "input": "x byte initial(42)",
+    "start": "decl_unfact",
+    "input": "yy integer initial(42)",
     "result": {
-      "decl_element": [
+      "decl_unfact": [
         {
-          "ident": "x"
+          "ident": "yy"
         },
         {
-          "type": "byte"
+          "type": "integer"
         },
         {
           "initial": [
@@ -36,6 +36,138 @@
     }
   },
   {
+    "start": "decl_fact",
+    "input": "(x) byte",
+    "result": {
+      "decl_fact": [
+        "(",
+        {
+          "ident": "x"
+        },
+        ")",
+        {
+          "type": "byte"
+        }
+      ]
+    }
+  },
+  {
+    "start": "decl_fact",
+    "input": "(x,y) byte",
+    "result": {
+      "decl_fact": [
+        "(",
+        {
+          "ident": "x"
+        },
+        ",",
+        {
+          "ident": "y"
+        },
+        ")",
+        {
+          "type": "byte"
+        }
+      ]
+    }
+  },
+  {
+    "start": "decl_fact",
+    "input": "(x, y) integer initial(42)",
+    "result": {
+      "decl_fact": [
+        "(",
+        {
+          "ident": "x"
+        },
+        ",",
+        {
+          "ident": "y"
+        },
+        ")",
+        {
+          "type": "integer"
+        },
+        {
+          "initial": [
+            "initial",
+            "(",
+            "42",
+            ")"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "start": "decl_element",
+    "input": "x byte",
+    "result": {
+      "decl_element": [
+        {
+          "decl_unfact": [
+            "x",
+            "byte"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "start": "decl_element",
+    "input": "(x,y) byte",
+    "result": {
+      "decl_element": [
+        {
+          "decl_fact": [
+            "(",
+            "x",
+            ",",
+            "y",
+            ")",
+            "byte"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "start": "decl_element",
+    "input": "x byte initial (42)",
+    "result": {
+      "decl_element": [
+        {
+          "decl_unfact": [
+            "x",
+            "byte",
+            "initial ( 42 )"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "start": "decl_element",
+    "input": "(x,y,z) integer initial (0)",
+    "result": {
+      "decl_element": [
+        {
+          "decl_fact": [
+            "(",
+            "x",
+            ",",
+            "y",
+            ",",
+            "z",
+            ")",
+            "integer",
+            "initial ( 0 )"
+          ]
+        }
+      ]
+    }
+  },
+  {
     "start": "decl_statement",
     "input": "declare abcd byte;",
     "result": {
@@ -43,8 +175,7 @@
         "declare",
         {
           "decl_element": [
-            "abcd",
-            "byte"
+            "abcd byte"
           ]
         },
         ";"
@@ -53,15 +184,13 @@
   },
   {
     "start": "decl_statement",
-    "input": "declare x byte initial(42);",
+    "input": "declare (z,b) integer;",
     "result": {
       "decl_statement": [
         "declare",
         {
           "decl_element": [
-            "x",
-            "byte",
-            "initial ( 42 )"
+            "( z , b ) integer"
           ]
         },
         ";"
@@ -70,21 +199,49 @@
   },
   {
     "start": "decl_statement",
-    "input": "declare x byte, y integer;",
+    "input": "declare x byte initial (42);",
     "result": {
       "decl_statement": [
         "declare",
         {
           "decl_element": [
-            "x",
-            "byte"
+            "x byte initial ( 42 )"
+          ]
+        },
+        ";"
+      ]
+    }
+  },
+  {
+    "start": "decl_statement",
+    "input": "declare (x,y) byte initial (0);",
+    "result": {
+      "decl_statement": [
+        "declare",
+        {
+          "decl_element": [
+            "( x , y ) byte initial ( 0 )"
+          ]
+        },
+        ";"
+      ]
+    }
+  },
+  {
+    "start": "decl_statement",
+    "input": "declare x byte, i integer;",
+    "result": {
+      "decl_statement": [
+        "declare",
+        {
+          "decl_element": [
+            "x byte"
           ]
         },
         ",",
         {
           "decl_element": [
-            "y",
-            "integer"
+            "i integer"
           ]
         },
         ";"
@@ -93,22 +250,81 @@
   },
   {
     "start": "decl_statement",
-    "input": "declare a integer initial (0), b byte;",
+    "input": "declare a integer initial (7), b byte;",
     "result": {
       "decl_statement": [
         "declare",
         {
           "decl_element": [
-            "a",
-            "integer",
-            "initial ( 0 )"
+            "a integer initial ( 7 )"
           ]
         },
         ",",
         {
           "decl_element": [
-            "b",
-            "byte"
+            "b byte"
+          ]
+        },
+        ";"
+      ]
+    }
+  },
+  {
+    "start": "decl_statement",
+    "input": "declare (a) byte;",
+    "result": {
+      "decl_statement": [
+        "declare",
+        {
+          "decl_element": [
+            "( a ) byte"
+          ]
+        },
+        ";"
+      ]
+    }
+  },
+  {
+    "start": "decl_statement",
+    "input": "declare x byte, (i,j) integer initial(42);",
+    "result": {
+      "decl_statement": [
+        "declare",
+        {
+          "decl_element": [
+            "x byte"
+          ]
+        },
+        ",",
+        {
+          "decl_element": [
+            "( i , j ) integer initial ( 42 )"
+          ]
+        },
+        ";"
+      ]
+    }
+  },
+  {
+    "start": "decl_statement",
+    "input": "declare (a,b,c,d) byte, x integer initial 100;",
+    "result": "bad input"
+  },
+  {
+    "start": "decl_statement",
+    "input": "declare (a,b,c,d) byte, x integer initial (100);",
+    "result": {
+      "decl_statement": [
+        "declare",
+        {
+          "decl_element": [
+            "( a , b , c , d ) byte"
+          ]
+        },
+        ",",
+        {
+          "decl_element": [
+            "x integer initial ( 100 )"
           ]
         },
         ";"

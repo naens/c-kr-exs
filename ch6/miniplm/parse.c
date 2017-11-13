@@ -159,10 +159,24 @@ int decl_statement(FILE *file, struct element *element)
     return 1;
 }
 
+/* TODO: new decl_element = decl_fact | decl_unfact
+ */
 /* decl_element = ident type [ initial ] */
 int decl_element(FILE *file, struct element *element)
 {
     element->type = DECL_ELEMENT;
+    element->elem_term = NONTERMINAL;
+    element->val.elem_list = NULL;
+    if (!add_nonterm(file, element, &decl_fact)
+        && !add_nonterm(file, element, &decl_unfact))
+        return 0;
+    return 1;
+}
+
+/* add decl_unfact = ident type [ initial ] */
+int decl_unfact(FILE *file, struct element *element)
+{
+    element->type = DECL_UNFACT;
     element->elem_term = NONTERMINAL;
     element->val.elem_list = NULL;
     if (!add_term(file, element, IDENT))
@@ -170,6 +184,40 @@ int decl_element(FILE *file, struct element *element)
     if (!add_term(file, element, TYPE))
     {
         del_last_elem(file, element);
+        return 0;
+    }
+    add_nonterm(file, element, &initial);
+    return 1;
+}
+/* decl_fact = "(" ident { "," ident } ")" type [ initial ] */
+int decl_fact(FILE *file, struct element *element)
+{
+    element->type = DECL_FACT;
+    element->elem_term = NONTERMINAL;
+    element->val.elem_list = NULL;
+    if (!add_term(file, element, PAROP))
+        return 0;
+    if (!add_term(file, element, IDENT))
+    {
+        del_last_elem(file, element);
+        return 0;
+    }
+    while (add_term(file, element, COMMA))
+    {
+        if (!add_term(file, element, IDENT))
+        {
+            free_list(file, element);
+            return 0;
+        }
+    }
+    if (!add_term(file, element, PARCLOSE))
+    {
+        free_list(file, element);
+        return 0;
+    }
+    if (!add_term(file, element, TYPE))
+    {
+        free_list(file, element);
         return 0;
     }
     add_nonterm(file, element, &initial);

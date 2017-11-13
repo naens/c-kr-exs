@@ -17,6 +17,10 @@ int (*name_to_pfun(char *fname))(FILE*, struct element*)
         return &decl_statement;
     else if (strcmp(fname, "decl_element") == 0)
         return &decl_element;
+    else if (strcmp(fname, "decl_unfact") == 0)
+        return &decl_unfact;
+    else if (strcmp(fname, "decl_fact") == 0)
+        return &decl_fact;
     else if (strcmp(fname, "initial") == 0)
         return &initial;
     else if (strcmp(fname, "procedure") == 0)

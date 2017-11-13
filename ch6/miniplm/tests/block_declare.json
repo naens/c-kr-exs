@@ -21,12 +21,12 @@
   },
   {
     "start": "block_end",
-    "input": "declare y integer initial (8), x byte; end;",
+    "input": "declare y integer initial (7), (x,y) byte; end;",
     "result": {
       "block_end": [
         {
           "declaration": [
-            "declare y integer initial ( 8 ) , x byte ;"
+            "declare y integer initial ( 7 ) , ( x , y ) byte ;"
           ]
         },
         "end",
@@ -36,17 +36,17 @@
   },
   {
     "start": "block_end",
-    "input": "declare x byte; declare y byte initial (8); x = z + y; call print(x); end;",
+    "input": "declare (x,y) byte; declare z byte initial (8); x = z + y; call print(x); end;",
     "result": {
       "block_end": [
         {
           "declaration": [
-            "declare x byte ;"
+            "declare ( x , y ) byte ;"
           ]
         },
         {
           "declaration": [
-            "declare y byte initial ( 8 ) ;"
+            "declare z byte initial ( 8 ) ;"
           ]
         },
         {
@@ -66,7 +66,7 @@
   },
   {
     "start": "do_block",
-    "input": "do; declare x byte; x = y * y; call println(x); end;",
+    "input": "do; declare x byte; x = y * y; call print(x); end;",
     "result": {
       "do_block": [
         "do",
@@ -75,7 +75,7 @@
           "block_end": [
             "declare x byte ;",
             "x = y * y ;",
-            "call println ( x ) ;",
+            "call print ( x ) ;",
             "end",
             ";"
           ]

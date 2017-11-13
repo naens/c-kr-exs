@@ -96,5 +96,20 @@
         }
       ]
     }
+  },
+  {
+    "start": "unit",
+    "input": "do; declare x byte; x = y + 1; call println(x); end;",
+    "result": {
+      "unit": [
+        {
+          "do_block": [
+            "do",
+            ";",
+            "declare x byte ; x = y + 1 ; call println ( x ) ; end ;"
+          ]
+        }
+      ]
+    }
   }
 ]

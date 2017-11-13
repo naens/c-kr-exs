@@ -129,6 +129,12 @@ int sprint_elem_json(char *buf, struct element *element, int depth)
         case DECL_ELEMENT:
             n += sprintf(buf + n, "\"decl_element\"");
             break;
+        case DECL_UNFACT:
+            n += sprintf(buf + n, "\"decl_unfact\"");
+            break;
+        case DECL_FACT:
+            n += sprintf(buf + n, "\"decl_fact\"");
+            break;
         case INITIAL:
             n += sprintf(buf + n, "\"initial\"");
             break;
