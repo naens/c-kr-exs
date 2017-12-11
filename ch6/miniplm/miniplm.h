@@ -33,10 +33,9 @@ struct element {
         char *str;
         struct elem_list *elem_list;
     } val;
-    union {                     /* data for execution */
-        int block_id;           /* block id of declaration for variables */
-        struct element *proc;   /* pointer to the ast node for procedure call */
-    } data;
+    int block_id;               /* blocks and procedures: block id
+                                 * identifiers (variables and procedure calls):
+                                 *                id of block where defined */
 };
 
 struct elem_list {
