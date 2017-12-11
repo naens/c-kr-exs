@@ -31,21 +31,34 @@ void name_table_del_block(struct name_table_node**, int);
 void name_table_free(struct name_table_node**);
 
 
-/* procedure table: contains pointers to the ast node of the procedure */
+/* variable map: block_id,var_name->stack of variables or procedure */
 
-struct proc_table_node {
+enum var_type {VAR_PROC, VAR_INT};
+
+struct var_map_node {
     char *name;
     int block_id;
-    struct element *proc;
-    struct proc_table_node *next;
+    struct var_map_element *elem;
+    struct var_map_node *next;
 };
 
-struct proc_table_node **init_proc_table();
+struct var_map_element {
+    enum var_type var_type;
+    union {
+        struct element *proc;
+        int num;
+    } val;
+    struct var_map_element *next;
+};
 
-void proc_table_add(struct proc_table_node**, char*, int, struct element*);
+struct var_map_node **init_var_map();
 
-struct element *proc_table_get(struct proc_table_node**, char*, int);
+void var_map_add(struct var_map_node**, char*, int, enum var_type, void*);
 
-void proc_table_free(struct proc_table_node**);
+struct var_map_element *var_map_get(struct var_map_node**, char*, int);
+
+void var_map_del_block(struct var_map_node**, int);
+
+void var_map_free(struct var_map_node**);
 
 #endif /* VARDATA_H */

@@ -4,9 +4,10 @@
 #include "vardata.h"
 
 #define NAME_TABLE_SZ 16
-#define PROC_TABLE_SZ 16
+#define VAR_TABLE_SZ 16
 
 /* name table functions */
+
 int name_table_hash(char *var_name)
 {
     int result = 0;
@@ -99,8 +100,8 @@ void name_table_free(struct name_table_node **name_table)
     free(name_table);
 }
 
-/* procedure table functions */
-int proc_table_hash(char *var_name, int block_id)
+/* var_map functions */
+int var_map_hash(char *var_name, int block_id)
 {
     int result = block_id;
     while (*var_name)
@@ -111,46 +112,102 @@ int proc_table_hash(char *var_name, int block_id)
     return result;
 }
 
-struct proc_table_node **init_proc_table()
+struct var_map_node **init_var_map()
 {
-    return malloc(PROC_TABLE_SZ * sizeof(struct proc_table_node*));
+    return malloc(VAR_TABLE_SZ * sizeof(struct var_map_node*));
 }
 
-void proc_table_add(struct proc_table_node **proc_table,
-                                char *var, int block, struct element *proc)
+void var_map_add(struct var_map_node **var_map,
+                 char *name, int block_id, enum var_type type, void *pval)
 {
-    int i = proc_table_hash(var, block) % PROC_TABLE_SZ;
-    struct proc_table_node *node = malloc(sizeof(struct proc_table_node));
-    node->next = proc_table[i];
-    proc_table[i] = node;
-    node->proc = proc;
+    int i = var_map_hash(name, block_id) % VAR_TABLE_SZ;
+    struct var_map_node *node = var_map[i];
+    if (node == NULL)
+    {
+        node = malloc(sizeof(struct var_map_node));
+        node->name = malloc(strlen(name) + 1);
+        strcpy(node->name, name);
+        node->block_id = block_id;
+        node->elem = NULL;
+        node->next = var_map[i];
+        var_map[i] = node;
+    }
+    struct var_map_element *elem = malloc(sizeof(struct var_map_element));
+    elem->var_type = type;
+    if (elem->var_type == VAR_PROC)
+    {
+        struct element **p = (struct element**)pval;
+        elem->val.proc = *p;
+    }
+    else if (elem->var_type == VAR_INT)
+    {
+        int *p = (int*) pval;
+        elem->val.num = *p;
+    }
+
+    elem->next = node->elem;
+    node->elem = elem;
 }
 
-struct element *proc_table_get(struct proc_table_node** proc_table,
+struct var_map_element *var_map_get(struct var_map_node** var_map,
                                 char *var, int block)
 {
-    int i = proc_table_hash(var, block) % PROC_TABLE_SZ;
-    struct proc_table_node *node = proc_table[i];
+    int i = var_map_hash(var, block) % VAR_TABLE_SZ;
+    struct var_map_node *node = var_map[i];
     while (node != NULL
           && node->block_id == block
           && strcmp(var, node->name) != 0)
         node = node->next;
     if (node == NULL)
         return NULL;
-    return node->proc;
+    return node->elem;
 }
 
-void proc_table_free(struct proc_table_node **proc_table)
+/* delete all first from stacks with block id block_id */
+void var_map_del_block(struct var_map_node **var_map, int block_id)
 {
-    for (int i = 0; i < PROC_TABLE_SZ; i++)
+    for (int i = 0; i < VAR_TABLE_SZ; i++)
     {
-        struct proc_table_node *node = proc_table[i];
+        struct var_map_node **pnode = &var_map[i];
+        while ((*pnode) != NULL)
+        {
+            if ((*pnode)->block_id == block_id)
+            {
+                struct var_map_element *tmp = (*pnode)->elem;
+                (*pnode)->elem = tmp->next;
+                free(tmp);
+            }
+            if ((*pnode)->elem == NULL)
+            {
+                struct var_map_node *tmp = (*pnode);
+                *pnode = tmp->next;
+                free(tmp->name);
+                free(tmp);
+            }
+            pnode = &(*pnode)->next;
+        }
+    }
+}
+
+void var_map_free(struct var_map_node **var_map)
+{
+    for (int i = 0; i < VAR_TABLE_SZ; i++)
+    {
+        struct var_map_node *node = var_map[i];
         while (node != NULL)
         {
-            struct proc_table_node *next = node->next;
+            struct var_map_node *next = node->next;
+            struct var_map_element *elem = node->elem;
+            while (elem != NULL)
+            {
+                struct var_map_element *tmp = elem;
+                elem = elem->next;
+                free(tmp);
+            }
+            free(node->name);
             free(node);
             node = next;
         }
     }    
-    free(proc_table);
+    free(var_map);
 }
