@@ -1,6 +1,8 @@
 #ifndef MINIPLM_H
 #define MINIPLM_H
 
+#include <stdio.h>
+
 #define MAX_IDENTLEN 0x100
 #define MAX_QUOTLEN 0x100
 #define MAX_NUMLEN 0x100
@@ -26,11 +28,15 @@ struct elem_list;
 struct element {
     enum type type;
     enum elem_term elem_term;
-    union {
+    union {                     /* value or subelements */
         int num;
         char *str;
         struct elem_list *elem_list;
     } val;
+    union {                     /* data for execution */
+        int block_id;           /* block id of declaration for variables */
+        struct element *proc;   /* pointer to the ast node for procedure call */
+    } data;
 };
 
 struct elem_list {
