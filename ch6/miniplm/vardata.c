@@ -21,7 +21,11 @@ int name_table_hash(char *var_name)
 
 struct name_table_node **init_name_table()
 {
-    return malloc(NAME_TABLE_SZ * sizeof(struct name_table_node*));
+    struct name_table_node **name_table =
+                     malloc(NAME_TABLE_SZ * sizeof(struct name_table_node*));
+    for (int i = 0; i < NAME_TABLE_SZ; i++)
+        name_table[i] = NULL;
+    return name_table;
 }
 
 void name_table_add(struct name_table_node **name_table, char *var, int bl)
@@ -34,6 +38,7 @@ void name_table_add(struct name_table_node **name_table, char *var, int bl)
     {
         node = malloc(sizeof(struct name_table_node));
         node->next = name_table[i];
+        node->var_name = var;
         name_table[i] = node;
         node->block_id_stack = NULL;
     }
@@ -61,7 +66,7 @@ void name_table_del_block(struct name_table_node **name_table, int block_id)
         struct name_table_node **pnode = &name_table[i];
         while (*pnode != NULL)
         {
-            if ((*pnode)->block_id_stack->block_id = block_id)
+            if ((*pnode)->block_id_stack->block_id == block_id)
             {
                 struct block_id_stack *tmp = (*pnode)->block_id_stack;
                 (*pnode)->block_id_stack = tmp->next;
@@ -71,9 +76,12 @@ void name_table_del_block(struct name_table_node **name_table, int block_id)
                     *pnode = tmp2->next;
                     free(tmp2);
                 }
+                else
+                    pnode = &(*pnode)->next;
                 free(tmp);
             }
-            pnode = &(*pnode)->next;
+            else
+                pnode = &(*pnode)->next;
         }
     }    
 }
@@ -90,8 +98,8 @@ void name_table_free(struct name_table_node **name_table)
             while (tmp != NULL)
             {
                 struct block_id_stack *tmp2 = tmp->next;
-                tmp = tmp2;
                 free(tmp);
+                tmp = tmp2;
             }
             free(node);
             node = next;
@@ -114,7 +122,11 @@ int var_map_hash(char *var_name, int block_id)
 
 struct var_map_node **init_var_map()
 {
-    return malloc(VAR_TABLE_SZ * sizeof(struct var_map_node*));
+    struct var_map_node **var_map =
+                    malloc(VAR_TABLE_SZ * sizeof(struct var_map_node*));
+    for (int i = 0; i < VAR_TABLE_SZ; i++)
+        var_map[i] = NULL;
+    return var_map;
 }
 
 void var_map_add(struct var_map_node **var_map,

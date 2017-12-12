@@ -56,7 +56,7 @@ int (*name_to_pfun(char *fname))(FILE*, struct element*)
     else if (strcmp(fname, "factor") == 0)
         return &factor;
     else return NULL;
- }
+}
 
 /* usage:
     * -f <file> [depth]

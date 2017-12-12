@@ -33,9 +33,7 @@ struct element {
         char *str;
         struct elem_list *elem_list;
     } val;
-    int block_id;               /* blocks and procedures: block id
-                                 * identifiers (variables and procedure calls):
-                                 *                id of block where defined */
+    int block_id;               /* block id, where variable is defined */
 };
 
 struct elem_list {

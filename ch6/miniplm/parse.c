@@ -159,8 +159,6 @@ int decl_statement(FILE *file, struct element *element)
     return 1;
 }
 
-/* TODO: new decl_element = decl_fact | decl_unfact
- */
 /* decl_element = ident type [ initial ] */
 int decl_element(FILE *file, struct element *element)
 {
