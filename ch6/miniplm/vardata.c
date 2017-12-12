@@ -196,7 +196,8 @@ void var_map_del_block(struct var_map_node **var_map, int block_id)
                 free(tmp->name);
                 free(tmp);
             }
-            pnode = &(*pnode)->next;
+            else
+                pnode = &(*pnode)->next;
         }
     }
 }
