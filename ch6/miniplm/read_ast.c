@@ -68,6 +68,8 @@ char **get_decl_names(struct element *decl_element)
     return result;
 }
 
+static int proc_decl = 0;
+static int proc_name = 0;
 void fill_element(struct element *element,
                   struct name_table_node **name_table,
                   struct var_map_node **var_map,
@@ -79,7 +81,12 @@ void fill_element(struct element *element,
         {
         case PROCEDURE:       ;    /* procedure declaration */
             char *name = get_proc_name(element);
-            printf("procedure: \"%s\":%d\n", name, block_id);
+            proc_decl = 1;
+            proc_name = 1;
+            name_table_add(name_table, name, block_id);
+            block_id++;
+          printf("procedure: \"%s\":%d\n", name, block_id);
+            element->block_id = block_id;
             var_map_add(var_map, name, block_id, PROCEDURE, element);
             break;
         case DECL_ELEMENT:  ;     /* variable declaration */
@@ -87,15 +94,18 @@ void fill_element(struct element *element,
             char **tmp = names;
             while (*names != NULL)
             {
-                printf("decl_element: \"%s\":%d\n", *names, block_id);
+//              printf("decl_element: \"%s\":%d\n", *names, block_id);
                 name_table_add(name_table, *names, block_id);
                 names++;
             }
             free(tmp);
             break;
         case BLOCK_END:       ;    /* blocks and procedure blocks */
-            block_id++;
-            printf("block %d\n", block_id);
+            if (!proc_decl)
+                block_id++;
+            else
+                proc_decl = 0;
+//          printf("block %d\n", block_id);
             break;
         default:
             break;
@@ -108,15 +118,35 @@ void fill_element(struct element *element,
         }
         if (element->type == BLOCK_END)
         {
-            printf("del_block:%d\n", block_id);
+//          printf("del_block:%d\n", block_id);
             name_table_del_block(name_table, block_id);
         }
     }
     else if (element->type == IDENT)
     {
         /* identifier: procedure or variable */
-        int var_block = name_table_get_block(name_table, element->val.str);
-        printf("identifier: \"%s\":%d\n", element->val.str, var_block);
+        if (proc_decl)
+        {
+            if (proc_name)
+            {
+                proc_name = 0;
+                element->block_id =
+                    name_table_get_block(name_table, element->val.str);
+            }
+            else
+            {
+                name_table_add(name_table, element->val.str, block_id);
+                element->block_id = block_id;
+//              printf("proc identifier: \"%s\":%d\n",
+//                  element->val.str, block_id);
+            }
+        }
+        else
+        {
+            int var_block = name_table_get_block(name_table, element->val.str);
+//          printf("identifier: \"%s\":%d\n", element->val.str, var_block);
+            element->block_id = var_block;
+        }
     }
 }
 
