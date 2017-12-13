@@ -109,12 +109,12 @@ void name_table_free(struct name_table_node **name_table)
 }
 
 /* var_map functions */
-int var_map_hash(char *var_name, int block_id)
+unsigned int var_map_hash(char *var_name, int block_id)
 {
     int result = block_id;
     while (*var_name)
     {
-        result += result * 57 + *var_name;
+        result += result * 57 + (256 + *var_name) % 256;
         var_name++;
     }
     return result;
