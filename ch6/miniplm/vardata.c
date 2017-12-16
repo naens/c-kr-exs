@@ -130,7 +130,7 @@ struct var_map_node **init_var_map()
 }
 
 void var_map_add(struct var_map_node **var_map,
-                 char *name, int block_id, enum var_type type, void *pval)
+                 char *name, int block_id, struct value *value)
 {
     int i = var_map_hash(name, block_id) % VAR_TABLE_SZ;
     struct var_map_node *node = var_map[i];
@@ -145,18 +145,7 @@ void var_map_add(struct var_map_node **var_map,
         var_map[i] = node;
     }
     struct var_map_element *elem = malloc(sizeof(struct var_map_element));
-    elem->var_type = type;
-    if (elem->var_type == VAR_PROC)
-    {
-        struct element **p = (struct element**)pval;
-        elem->val.proc = *p;
-    }
-    else if (elem->var_type == VAR_INT)
-    {
-        int *p = (int*) pval;
-        elem->val.num = *p;
-    }
-
+    elem->value = value;
     elem->next = node->elem;
     node->elem = elem;
 }
@@ -187,6 +176,7 @@ void var_map_del_block(struct var_map_node **var_map, int block_id)
             {
                 struct var_map_element *tmp = (*pnode)->elem;
                 (*pnode)->elem = tmp->next;
+                free(tmp->value);
                 free(tmp);
             }
             if ((*pnode)->elem == NULL)
@@ -215,6 +205,7 @@ void var_map_free(struct var_map_node **var_map)
             {
                 struct var_map_element *tmp = elem;
                 elem = elem->next;
+                free(tmp->value);
                 free(tmp);
             }
             free(node->name);

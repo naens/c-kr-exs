@@ -42,18 +42,23 @@ struct var_map_node {
     struct var_map_node *next;
 };
 
-struct var_map_element {
+struct value {
     enum var_type var_type;
     union {
         struct element *proc;
-        int num;
+        int number;
+        char *string;
     } val;
+};
+
+struct var_map_element {
+    struct value *value;
     struct var_map_element *next;
 };
 
 struct var_map_node **init_var_map();
 
-void var_map_add(struct var_map_node**, char*, int, enum var_type, void*);
+void var_map_add(struct var_map_node**, char*, int, struct value *value);
 
 struct var_map_element *var_map_get(struct var_map_node**, char*, int);
 

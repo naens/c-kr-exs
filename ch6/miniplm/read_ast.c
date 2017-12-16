@@ -85,9 +85,12 @@ void fill_element(struct element *element,
             proc_name = 1;
             name_table_add(name_table, name, block_id);
             block_id++;
-          printf("procedure: \"%s\":%d\n", name, block_id);
+            printf("procedure: \"%s\":%d\n", name, block_id);
             element->block_id = block_id;
-            var_map_add(var_map, name, block_id, PROCEDURE, element);
+            struct value *value = malloc(sizeof(struct value));
+            value->var_type = VAR_PROC;
+            value->val.proc = element;
+            var_map_add(var_map, name, block_id, value);
             break;
         case DECL_ELEMENT:  ;     /* variable declaration */
             char **names = get_decl_names(element);
@@ -105,6 +108,7 @@ void fill_element(struct element *element,
                 block_id++;
             else
                 proc_decl = 0;
+            element->block_id = block_id;
 //          printf("block %d\n", block_id);
             break;
         default:
