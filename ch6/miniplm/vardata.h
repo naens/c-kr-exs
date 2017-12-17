@@ -33,7 +33,7 @@ void name_table_free(struct name_table_node**);
 
 /* variable map: block_id,var_name->stack of variables or procedure */
 
-enum var_type {VAR_PROC, VAR_INT};
+enum var_type {VAR_PROC, VAR_INT, VAR_NULL};
 
 struct var_map_node {
     char *name;

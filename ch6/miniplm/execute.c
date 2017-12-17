@@ -19,10 +19,29 @@ struct element *find(struct element *element, enum type type)
 void exec_block_end(struct var_map_node **var_map,
                     struct element *block_end, struct value *value)
 {
+    if (value != NULL)
+        value->var_type = VAR_NULL;
+
     /* TODO: execute each unit in the block */
+    printf("begin exec_block_end: %d\n", block_end->block_id);
+
+    struct elem_list *list = block_end->val.elem_list;
+
+    /* skip declarations */
+    while (list != NULL && list->element->type == DECLARATION)
+        list = list->next;
+
+    while (list != NULL)
+    {
+        /* TODO: execute unit */
+        if (list->element->type == UNIT)
+            printf("unit in block %d\n", block_end->block_id);
+        list = list->next;
+    }
 
     /* remove current block variables from map */
     var_map_del_block(var_map, block_end->block_id);
+    printf("end exec_block_end: %d\n", block_end->block_id);
 }
 
 void exec_proc(struct var_map_node **var_map, struct element *proc, 
@@ -55,9 +74,8 @@ void exec_proc(struct var_map_node **var_map, struct element *proc,
 
 void execute(struct element *start, struct var_map_node **var_map)
 {
-    struct element *do_block = find(start, DO_BLOCK);
-    struct element *block_end =
-                     find(do_block->val.elem_list->element, BLOCK_END);
+    struct element *do_block = find(start->val.elem_list->element, DO_BLOCK);
+    struct element *block_end = find(do_block, BLOCK_END);
     exec_block_end(var_map, block_end, NULL);
 }
 
