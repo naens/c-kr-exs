@@ -2,7 +2,7 @@ prog$fib:
 do;
     declare val integer initial (7);
 
-    fib: procedure(n);
+    fib: procedure(n) integer;
         declare n integer;
         if n = 0 then
             return 0;
