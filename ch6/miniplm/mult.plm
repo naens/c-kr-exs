@@ -1,8 +1,8 @@
 prog$mult:
 do;
-    mult: procedure(a, b);
+    mult: procedure(a, b) integer;
         declare a integer, b integer;
-        rec: procedure(a, b, acc);
+        rec: procedure(a, b, acc) integer;
             declare (a, b) integer;
             declare acc integer;
             if b = 0 then
@@ -12,7 +12,7 @@ do;
             else
                 return rec(a, b - 1, acc + a);
         end rec;
-        call rec(a, b, 0);
+        return rec(a, b, 0);
     end mult;
 
     call writeln(mult(3, 6));
