@@ -8,6 +8,7 @@ do;
             call writeln(x);
         end test2;
 
+        x=100
         call test2(1);
         call test2(2);
         call test2(3);
