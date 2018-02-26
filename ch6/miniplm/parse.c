@@ -585,10 +585,10 @@ int rel_op(FILE *file, struct element *element)
     return 0;
 }
 
-/* expr = arithm [ rel_op arithm ] */
-int expr(FILE *file, struct element *element)
+/* log_expr = arithm [ rel_op arithm ] */
+int log_expr(FILE *file, struct element *element)
 {
-    element->type = EXPR;
+    element->type = LOG_EXPR;
     element->elem_term = NONTERMINAL;
     element->val.elem_list = NULL;
     if (!add_nonterm(file, element, &arithm))
@@ -607,7 +607,26 @@ int expr(FILE *file, struct element *element)
         return 1;
 }
 
-/* arithm = {term ( "+" | "-" ) } term */
+/* expr: [not] log_expr { ( and | or ) expr } */
+int expr(FILE *file, struct element *element)
+{
+    element->type = EXPR;
+    element->elem_term = NONTERMINAL;
+    element->val.elem_list = NULL;
+    add_term(file, element, RW_NOT);
+    if (!add_nonterm(file, element, &log_expr))
+        return 0;
+    do {
+        if (!add_term(file, element, RW_AND)
+            && !add_term(file, element, RW_OR))
+            return 1;
+    } while (add_nonterm(file, element, &log_expr));
+    del_last_elem(file, element);
+    return 1;
+}
+
+
+/* arithm = term { ( "+" | "-" ) term } */
 int arithm(FILE* file, struct element *element)
 {
     element->type = ARITHM;
@@ -616,14 +635,16 @@ int arithm(FILE* file, struct element *element)
     if (!add_nonterm(file, element, &term))
         return 0;
     do {
-        if (!add_term(file, element, PLUS) && !add_term(file, element, MINUS))
+        if (!add_term(file, element, PLUS)
+            && !add_term(file, element, MINUS)
+            && !add_term(file, element, RW_MOD))
             return 1;
     } while (add_nonterm(file, element, &term));
     del_last_elem(file, element);
     return 1;
 }
 
-/* term = {factor ( "*" | "/" ) } factor */
+/* term = factor { ( "*" | "/" ) factor } */
 int term(FILE *file, struct element *element)
 {
     element->type = TERM;

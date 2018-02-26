@@ -145,6 +145,14 @@ int get_reserved(char *str, int *is_reserved)
         return RW_CALL;
     else if (strcmp(str, "return") == 0)
         return RW_RETURN;
+    else if (strcmp(str, "and") == 0)
+        return RW_AND;
+    else if (strcmp(str, "or") == 0)
+        return RW_OR;
+    else if (strcmp(str, "not") == 0)
+        return RW_NOT;
+    else if (strcmp(str, "mod") == 0)
+        return RW_MOD;
     *is_reserved = 0;
     return -1;
 }

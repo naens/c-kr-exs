@@ -29,7 +29,9 @@ int is_rw(int type)
         || type == RW_TO || type == RW_BY || type == RW_INITIAL
         || type == RW_DO || type == RW_WHILE || type == RW_END
         || type == RW_IF || type == RW_THEN || type == RW_ELSE
-        || type == RW_CALL || type == RW_RETURN;
+        || type == RW_CALL || type == RW_RETURN
+        || type == RW_AND || type == RW_OR
+        || type == RW_NOT || type == RW_MOD;
 }
 
 int sprint_rw(char *buf, int type)
@@ -75,6 +77,18 @@ int sprint_rw(char *buf, int type)
         break;
     case RW_RETURN:
         n = sprintf(buf, "return");
+        break;
+    case RW_AND:
+        n = sprintf(buf, "or");
+        break;
+    case RW_OR:
+        n = sprintf(buf, "or");
+        break;
+    case RW_NOT:
+        n = sprintf(buf, "not");
+        break;
+    case RW_MOD:
+        n = sprintf(buf, "mod");
         break;
     }
     return n;
@@ -174,6 +188,9 @@ int sprint_elem_json(char *buf, struct element *element, int depth)
         case REL_OP:
             n += sprintf(buf + n, "\"rel_op\"");
             break;
+        case LOG_EXPR:
+            n += sprintf(buf + n, "\"log_expr\"");
+            break;
         case EXPR:
             n += sprintf(buf + n, "\"expr\"");
             break;
@@ -219,7 +236,6 @@ int sprint_elem_str(char *buf, struct element *element)
         else if (is_rw(element->type))
         {
             n += sprint_rw(buf + n, element->type);
-//            n += sprintf(buf + n, " ");
         }
         else
             n += sprintf(buf, "%c", spec_from_id(element->type));

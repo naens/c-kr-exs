@@ -47,6 +47,8 @@ int (*name_to_pfun(char *fname))(FILE*, struct element*)
         return &args;
     else if (strcmp(fname, "rel_op") == 0)
         return &rel_op;
+    else if (strcmp(fname, "log_expr") == 0)
+        return &expr;
     else if (strcmp(fname, "expr") == 0)
         return &expr;
     else if (strcmp(fname, "arithm") == 0)

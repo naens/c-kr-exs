@@ -26,7 +26,8 @@ statement = ident "=" expr ";" | "CALL" ident [ args ]  ";" | ";"
 args = "(" expr { "," expr } ")"
 
 rel_op = "<" | ">" | "<=" | ">=" | "<>" | "="
-expr = arithm [ rel_op  arithm ]
-arithm = { term ( "+" | "-" ) } term
-term = { factor ( "*" | "/") } factor
+log_expr = arithm [ rel_op arithm ]
+expr = [not] log_expr { (and | or ) expr }
+arithm = term { ( "+" | "-" | mod ) term }
+term = factor { ( "*" | "/") factor }
 factor = [ "-" ] ( number | ident [ args ] | "(" expr ")")
