@@ -16,15 +16,19 @@ struct element *find(struct element *element, enum type type)
         return NULL;
 }
 
-void exec_block_end(struct var_map_node **var_map,
+struct value *exec_unit(struct var_map_node **var_map,
+                    struct element *element, struct value *value)
+{
+    return NULL;
+}
+
+struct value *exec_block_end(struct var_map_node **var_map,
                     struct element *block_end, struct value *value)
 {
     if (value != NULL)
         value->var_type = VAR_NULL;
 
-    /* TODO: execute each unit in the block */
     printf("begin exec_block_end: %d\n", block_end->block_id);
-
     struct elem_list *list = block_end->val.elem_list;
 
     /* skip declarations */
@@ -33,18 +37,22 @@ void exec_block_end(struct var_map_node **var_map,
 
     while (list != NULL)
     {
-        /* TODO: execute unit */
-        if (list->element->type == UNIT)
-            printf("unit in block %d\n", block_end->block_id);
+        struct value *result;
+        if (list->element->type == UNIT) {
+            result = exec_unit(var_map, list->element, value);
+            if (result != NULL)
+                return result;
+        }
         list = list->next;
     }
 
     /* remove current block variables from map */
     var_map_del_block(var_map, block_end->block_id);
     printf("end exec_block_end: %d\n", block_end->block_id);
+    return NULL;
 }
 
-void exec_proc(struct var_map_node **var_map, struct element *proc, 
+struct value *exec_proc(struct var_map_node **var_map, struct element *proc, 
                struct value **args, struct value *value)
 {
     /* find arguments, assign as variables for current block */
@@ -69,7 +77,7 @@ void exec_proc(struct var_map_node **var_map, struct element *proc,
     }
 
     /* execute the body */
-    exec_block_end(var_map, find(proc, BLOCK_END), value);
+    return exec_block_end(var_map, find(proc, BLOCK_END), value);
 }
 
 void execute(struct element *start, struct var_map_node **var_map)
