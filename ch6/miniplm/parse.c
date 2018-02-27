@@ -671,7 +671,6 @@ int factor(FILE *file, struct element *element)
         return 1;
     else if (add_term(file, element, IDENT))
     {
-        /* TODO: optional args */
         add_nonterm(file, element, &args);
         return 1;
     }
