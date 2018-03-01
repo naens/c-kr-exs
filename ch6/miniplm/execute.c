@@ -5,6 +5,11 @@
 #include "vardata.h"
 #include "read_ast.h"
 
+/* forward declarations */
+struct value *exec_block_end(struct var_map_node **var_map,
+                    struct element *block_end);
+
+
 struct element *find(struct element *element, enum type type)
 {
     struct elem_list *list = element->val.elem_list;
@@ -16,18 +21,62 @@ struct element *find(struct element *element, enum type type)
         return NULL;
 }
 
-struct value *exec_unit(struct var_map_node **var_map,
-                    struct element *element, struct value *value)
+struct value *exec_cond(struct var_map_node **var_map,
+                    struct element *element)
 {
     return NULL;
 }
 
-struct value *exec_block_end(struct var_map_node **var_map,
-                    struct element *block_end, struct value *value)
+struct value *exec_do_block(struct var_map_node **var_map,
+                    struct element *element)
 {
-    if (value != NULL)
-        value->var_type = VAR_NULL;
+    struct element *block_end = find(do_block, BLOCK_END);
+    return exec_block_end(var_map, block_end);
+}
 
+struct value *exec_do_while(struct var_map_node **var_map,
+                    struct element *element)
+{
+    return NULL;
+}
+
+struct value *exec_do_iter(struct var_map_node **var_map,
+                    struct element *element)
+{
+    return NULL;
+}
+
+struct value *exec_statement(struct var_map_node **var_map,
+                    struct element *element)
+{
+    return NULL;
+}
+
+/* unit = cond | do_block | do_while | do_iter | statement */
+struct value *exec_unit(struct var_map_node **var_map,
+                    struct element *element)
+{
+    struct elem_list *list = element->val.elem_list;
+    struct element *sub_element = list->element;
+    switch (element->type) {
+    case COND:
+        return exec_cond(var_map, sub_element);
+    case DO_BLOCK:
+        return exec_do_block(var_map, sub_element);
+    case DO_WHILE:
+        return exec_do_while(var_map, sub_element);
+    case DO_ITER:
+        return exec_do_iter(var_map, sub_element);
+    case STATEMENT:
+        return exec_statement(var_map, sub_element);
+    default:
+        return NULL;
+    }
+}
+
+struct value *exec_block_end(struct var_map_node **var_map,
+                    struct element *block_end)
+{
     printf("begin exec_block_end: %d\n", block_end->block_id);
     struct elem_list *list = block_end->val.elem_list;
 
@@ -39,7 +88,7 @@ struct value *exec_block_end(struct var_map_node **var_map,
     {
         struct value *result;
         if (list->element->type == UNIT) {
-            result = exec_unit(var_map, list->element, value);
+            result = exec_unit(var_map, list->element);
             if (result != NULL)
                 return result;
         }
@@ -53,7 +102,7 @@ struct value *exec_block_end(struct var_map_node **var_map,
 }
 
 struct value *exec_proc(struct var_map_node **var_map, struct element *proc, 
-               struct value **args, struct value *value)
+               struct value **args)
 {
     /* find arguments, assign as variables for current block */
     struct element *params = find(proc->val.elem_list->element, PARAMS);
@@ -77,14 +126,13 @@ struct value *exec_proc(struct var_map_node **var_map, struct element *proc,
     }
 
     /* execute the body */
-    return exec_block_end(var_map, find(proc, BLOCK_END), value);
+    return exec_block_end(var_map, find(proc, BLOCK_END));
 }
 
 void execute(struct element *start, struct var_map_node **var_map)
 {
     struct element *do_block = find(start->val.elem_list->element, DO_BLOCK);
-    struct element *block_end = find(do_block, BLOCK_END);
-    exec_block_end(var_map, block_end, NULL);
+    exec_do_block(var_map, do_block);
 }
 
 int main(int argc, char **argv)
