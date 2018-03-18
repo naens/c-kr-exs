@@ -1,0 +1,62 @@
+#+TITLE: Chapter 6 Notes
+
+#+OPTIONS: toc:nil
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+
+* Overview
+
+So this is about chapter 6.  It was the most difficult chapter so far.
+It took me more than four months, much more than any previous chapter,
+and I didn't to all the exercises.
+
+This chapters is called /Structures/, but it covers much more than
+just C structures...
+
+
+* Structures
+
+The beginning was just structures, like an association of data cells
+that can be allocated, stored in arrays, assigned, and so on.
+
+Then there was the difficult part, which took me the most time.  It
+was to write a parser for the C language.  The C language is so
+complex, that I first did a small side project, similar to /Oberon-0/
+in order to learn to write parsers.  So it's [[https://github.com/naens/c-kr-exs/tree/master/ch6/miniplm][miniplm]].  It's not
+finished yet.  It's supposed to be an interpreter of the minimalistic
+language described in the ebnf file.  There are also example programs.
+The good news is that it indeed can parse the example files.
+
+I also started the C parser (I only created some files, nothing can
+run yet).
+
+
+* Hash Tables
+
+I read about the hashtables and there was nothing new.  I even did
+none of the exercises because I already implemented this functionality
+several times for my own projects and it was already done in the
+parser exercise.
+
+
+* Unions
+
+It was a nice review about unions, which I also have already used, so
+that's good.
+
+
+* Bit fields
+
+Bit fields are another useful thing in the C language, which for some
+reason is not often used.  It's just a shortcut to pack and unpack
+bits in a limited amount of space...  It's possible that real problems
+are usually more complicated than that, so other things must be
+used...
+
+
+* Conclusion
+
+So that's it for this chapter.  I'll finish the parser later when I
+have more free time.  Apart from that, this chapter was not that
+difficult and I think I knew more than 30% already (but I'm not sure).
