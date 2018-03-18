@@ -8,6 +8,4 @@ PL/M language.  The result is something between PL/M and PL/0.  The syntax
 is close to PL/M, but the size of the grammar is closer to PL/0.
 
 * To Be Done
- * TODO test the grammar with logical expressions, update test files
  * TODO write an interpreter
- * TODO generate code (machine code, asm...)
