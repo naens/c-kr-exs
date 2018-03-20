@@ -27,7 +27,7 @@ void pf(char *str, ...)
                 printf("%o", va_arg(ap, int));
                 break;
             case 'c':
-                printf("%d", va_arg(ap, int));
+                printf("%c", va_arg(ap, int));
                 break;
             case 'f':
                 printf("%f", va_arg(ap, double));
@@ -48,5 +48,6 @@ int main(int argc, char **argv)
 {
     pf("abcde%d\n", 45);
     pf("abcde%s-%x\n", "LKJ", 45);
+    pf("abcde%c-%x\n", 'L', 45);
     return 0;
 }
