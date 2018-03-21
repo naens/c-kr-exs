@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void scan(char fmt, a* void)
+void scan(char fmt, void *a)
 {
     int c;
     int i = 0;
