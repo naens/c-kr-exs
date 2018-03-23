@@ -1,0 +1,42 @@
+#+TITLE: Chapter 7 Notes
+
+#+OPTIONS: toc:nil
+#+OPTIONS: author:nil
+#+OPTIONS: num:nil
+
+* Overview
+
+In this chapter we learned about the input and output in unix.  It described
+many things that were already used in previous chapters, so it was not that
+difficult.
+
+* Formatted Input and Output
+
+The ~printf~ and ~scanf~ functions have a lot of ways to be used and are a
+little bit complex.  So it's nice to have another description of what they
+do.
+
+* Line Input and Output
+
+The functions ~fgets~ and ~fguts~ are complicated and often unpredictable. 
+So this chapter tried to make them look less scary than they actually are by
+describing how they work.  So it was a useful chapter.
+
+* Other Input and Output Functions
+
+There are much more functions.  For example, string functions, unget
+function, pipe and execution functions, and also for functins...  So in
+order to learn them there are the ~man~ pages.  Actually I've read somewhere
+that the Linux ~man~ pages are not that good.  But at least their contents
+are often enough to be used to write programs.
+
+In the standard library there are also other useful functions, like the
+memory functions, methematical functions and random number functions.
+
+* Conclusion
+
+So this chapter was not that useful mainly because it's outdated and
+describes things that are still useful, but better described elsewhere.
+And there is also POSIX, that simplifies a lot by being the standard, but
+there was no POSIX when the book was written, so that's one reason why it's
+oudated.
