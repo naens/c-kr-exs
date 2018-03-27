@@ -189,17 +189,6 @@ void print_free_list()
 int main(int argc, char **argv)
 {
     init();
-    /*
-    print_free_list();
-    char *mem = get_mem(123);
-    print_free_list();
-    free_mem(mem);
-    print_free_list();
-    mem = get_mem(100);
-    print_free_list();
-    free_mem(mem);
-    print_free_list();
-    */
     const int AR_SZ = 8;
     char *ar[AR_SZ];
     int item;
