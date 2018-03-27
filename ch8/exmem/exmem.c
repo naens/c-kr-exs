@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdint.h>
+#include <stdarg.h>
+#include <stdlib.h>
 
 typedef uint64_t tbr;
 typedef tbr* tbl;
-#define B_SIZE(b) *(tbl)(b)
+#define B_SIZE(b) *((tbl)(b))
 #define B_NEXT(b) (tbl)(*((tbl)(b)+1))
 #define B_PREV(b) (tbl)(*((tbl)(b)+2))
 #define B_DATA(b) ((tbl)(b)+3)
@@ -21,8 +23,20 @@ tbl pbuf[BUF_SZ];
 tbl buf = (tbl) pbuf;
 tbr used;
 
+void error(char *fmt, ...)
+{
+    va_list ap;
+    va_start(ap, fmt);
+    vfprintf(stderr, fmt, ap);
+    va_end(ap);
+    exit(1);
+}
+
 void init()
 {
+    if (sizeof (tbr) != sizeof (tbl))
+        error("type tbr and tbl do not have the same size\n"
+            "sizeof(tbr) = %d and sizeof(tbl) = %d", sizeof (tbr), sizeof (tbl));
     B_SETSIZE(buf, 0);
     B_SETPREV(buf, buf);
     B_SETNEXT(buf, buf);
@@ -64,10 +78,10 @@ void del(tbl b)
  * the memory is initialized */
 tbl add_mem(tbr nblocks)
 {
-    if ((tbr)nblocks < MIN_ADD_SZ)
+    if (nblocks < MIN_ADD_SZ)
         nblocks = MIN_ADD_SZ;
 
-    if (used + nblocks < BUF_SZ)
+    if (used + nblocks >= BUF_SZ)
         return 0;
 
     tbl result = (tbl)(&pbuf[used]);
@@ -82,11 +96,11 @@ tbl add_mem(tbr nblocks)
 void *take(tbl b, tbr sz)
 {
     void *data;
-    tbr new_sz = B_SIZE(b) - sz - 3;
     data = (void*)B_DATA(b);
-    if (new_sz >= MIN_DATA_SZ)
+    if (B_SIZE(b) >= MIN_DATA_SZ + 3 + sz)
     {
         tbl bnew = b + 3 + sz;
+        B_SETSIZE(bnew, B_SIZE(b) - sz - 3);
         B_SETSIZE(b, sz);
         insert_after(b, bnew);
     }
@@ -97,12 +111,11 @@ void *take(tbl b, tbr sz)
 void *get_mem(int n_bytes)
 {
     tbr sz = B_NBLOCKS(n_bytes);
-    tbl data;
 
     tbl curr = B_NEXT(buf);
     while (curr != buf)
     {
-        int csz = B_SIZE(curr);
+        tbr csz = B_SIZE(curr);
         if (csz >= sz)
             return take(curr, sz);
         curr = B_NEXT(curr);
@@ -139,7 +152,7 @@ void check_merge(tbl b)
     tbl prev = B_PREV(b);
     try_merge(prev, b);
     tbl next = B_NEXT(b);
-    try_merge(next, b);
+    try_merge(b, next);
 }
 
 tbl find_next(tbl b)
@@ -147,19 +160,73 @@ tbl find_next(tbl b)
     tbl curr = B_NEXT(buf);
     while (B_DATA(curr) < b && curr != buf)
         curr = B_NEXT(curr);
-    return curr == buf ? 0 : curr;
+    return curr;
 }
 
 void free_mem(void *p)
 {
     tbl pp = (tbl)p;
     tbl b = B_FROM_DATA_PTR(pp);
-    insert_before(b, find_next(b));
+    tbl next = find_next(b);
+    insert_before(next, b);
     check_merge(b);
+}
+
+void print_free_list()
+{
+    tbl curr = B_NEXT(buf);
+    printf(" used:%d; ", used);
+    if (curr == buf)
+        printf("empty");
+    while (curr != buf)
+    {
+        printf("%d,%08x ", B_SIZE(curr), ((uint64_t)B_NEXT(curr)) & 0xffffffff);
+        curr = B_NEXT(curr);
+    }
+    printf("\n");
 }
 
 int main(int argc, char **argv)
 {
     init();
+    /*
+    print_free_list();
+    char *mem = get_mem(123);
+    print_free_list();
+    free_mem(mem);
+    print_free_list();
+    mem = get_mem(100);
+    print_free_list();
+    free_mem(mem);
+    print_free_list();
+    */
+    const int AR_SZ = 8;
+    char *ar[AR_SZ];
+    int item;
+    int n;
+    int seed;
+    if (argc == 2)
+    	seed = atoi(argv[1]);
+    else
+    	seed = 0;
+    srand(seed);
+    for (int i = 0; i < AR_SZ; i++)
+    	ar[i] = NULL;
+    for (int i = 0; i < AR_SZ * 3; i++) {
+    	item = rand() % AR_SZ;
+    	if (ar[item] == NULL) {
+    	    n = rand() % (2 * BUF_SZ);
+    	    printf("ar[%d] = get_mem(%d);	//", item, n);
+    	    ar[item] = get_mem(n);
+    	    if (ar[item] == NULL)
+    	    	printf(" NO MEM");
+    	} else {
+    	    printf("free_mem(ar[%d]);	//", item);
+    	    free_mem(ar[item]);
+    	    ar[item] = NULL;
+    	}
+    	print_free_list();
+    }
     return 0;
 }
+
