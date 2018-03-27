@@ -186,6 +186,9 @@ void print_free_list()
     printf("\n");
 }
 
+/*
+ * tested by executing ./exmem $((RANDOM % 1000))
+ */
 int main(int argc, char **argv)
 {
     init();
